@@ -7,9 +7,9 @@
  * @license    http://opensource.org/licenses/MIT
  */
 
-namespace Agit\BaseBundle\Tests\Service;
+namespace Agit\IntlBundle\Tests\Service;
 
-use Agit\BaseBundle\Service\UrlService;
+use Agit\IntlBundle\Service\UrlService;
 
 class UrlServiceTest extends \PHPUnit_Framework_TestCase
 {

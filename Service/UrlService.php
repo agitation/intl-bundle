@@ -7,9 +7,9 @@
  * @license    http://opensource.org/licenses/MIT
  */
 
-namespace Agit\BaseBundle\Service;
+namespace Agit\IntlBundle\Service;
 
-use Agit\BaseBundle\Exception\InternalErrorException;
+use Agit\IntlBundle\Exception\InternalErrorException;
 
 class UrlService
 {

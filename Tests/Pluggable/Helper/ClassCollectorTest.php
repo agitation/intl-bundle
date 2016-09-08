@@ -7,9 +7,9 @@
  * @license    http://opensource.org/licenses/MIT
  */
 
-namespace Agit\BaseBundle\Tests\Helper;
+namespace Agit\IntlBundle\Tests\Helper;
 
-use Agit\BaseBundle\Service\ClassCollector;
+use Agit\IntlBundle\Service\ClassCollector;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpKernel\Config\FileLocator;
 
@@ -19,7 +19,7 @@ class ClassCollectorTest extends WebTestCase
     // (the FileLocator used by ClassCollector must resolve the paths of registered bundles)
     public function testCollect()
     {
-        $dummyNamespace = 'AgitBaseBundle:Tests:Pluggable:Helper:_data';
+        $dummyNamespace = 'AgitIntlBundle:Tests:Pluggable:Helper:_data';
 
         $kernel = static::createKernel();
         $kernel->boot();
@@ -30,8 +30,8 @@ class ClassCollectorTest extends WebTestCase
         sort($fileList);
 
         $expected = [
-            '\Agit\BaseBundle\Tests\Helper\_data\DummyFile1',
-            '\Agit\BaseBundle\Tests\Helper\_data\DummyFile2'
+            '\Agit\IntlBundle\Tests\Helper\_data\DummyFile1',
+            '\Agit\IntlBundle\Tests\Helper\_data\DummyFile2'
         ];
 
         $this->assertSame($expected, $fileList);

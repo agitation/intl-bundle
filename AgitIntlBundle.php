@@ -7,15 +7,15 @@
  * @license    http://opensource.org/licenses/MIT
  */
 
-namespace Agit\BaseBundle
+namespace Agit\IntlBundle
 {
-    use Agit\BaseBundle\DependencyInjection\RegisterPluggableServicesCompilerPass;
-    use Agit\BaseBundle\DependencyInjection\RegisterProcessorsCompilerPass;
+    use Agit\IntlBundle\DependencyInjection\RegisterPluggableServicesCompilerPass;
+    use Agit\IntlBundle\DependencyInjection\RegisterProcessorsCompilerPass;
     use Symfony\Component\DependencyInjection\Compiler\PassConfig;
     use Symfony\Component\DependencyInjection\ContainerBuilder;
     use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-    class AgitBaseBundle extends Bundle
+    class AgitIntlBundle extends Bundle
     {
         public function build(ContainerBuilder $containerBuilder)
         {

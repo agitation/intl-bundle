@@ -7,10 +7,10 @@
  * @license    http://opensource.org/licenses/MIT
  */
 
-namespace Agit\BaseBundle\Service;
+namespace Agit\IntlBundle\Service;
 
-use Agit\BaseBundle\Event\CronjobRegistrationEvent;
-use Agit\BaseBundle\Exception\InternalErrorException;
+use Agit\IntlBundle\Event\CronjobRegistrationEvent;
+use Agit\IntlBundle\Exception\InternalErrorException;
 use DateTime;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 

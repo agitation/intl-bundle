@@ -7,12 +7,12 @@
  * @license    http://opensource.org/licenses/MIT
  */
 
-namespace Agit\BaseBundle\Service;
+namespace Agit\IntlBundle\Service;
 
-use Agit\BaseBundle\Exception\InternalErrorException;
-use Agit\BaseBundle\Pluggable\Depends;
-use Agit\BaseBundle\Pluggable\PluginInterface;
-use Agit\BaseBundle\Pluggable\ProcessorFactoryInterface;
+use Agit\IntlBundle\Exception\InternalErrorException;
+use Agit\IntlBundle\Pluggable\Depends;
+use Agit\IntlBundle\Pluggable\PluginInterface;
+use Agit\IntlBundle\Pluggable\ProcessorFactoryInterface;
 use Doctrine\Common\Annotations\Reader;
 use Symfony\Component\HttpKernel\Kernel;
 

@@ -1,32 +1,16 @@
-parameters:
-    agit.common.cachedir: %kernel.cache_dir%/agit
-    agit.common.php.version: ">=5.4.9"
-    agit.common.symfony.version: "2.3.*"
-
 services:
-    agit.common.cache.persistent:
-        class: Doctrine\Common\Cache\FilesystemCache
-        arguments: [ "%agit.common.cachedir%" ]
+    agit.intl.locale:
+        class: Agit\IntlBundle\Service\LocaleService
+        arguments: [ "@?agit.intl.localeconfig", "%agit.intl.locales%", "%kernel.root_dir%/Resources/translations", "agit" ]
 
-    agit.common.cache.volatile:
-        class: Doctrine\Common\Cache\ApcCache
+    # (Optional) Twig extension for template text block translations
+    agit.intl.twig.translation:
+        class: Agit\IntlBundle\Service\TranslationExtension
+        arguments: [ "@agit.intl.locale" ]
+        tags: [{ name: twig.extension }]
 
-    agit.common.filecollector:
-        class: Agit\BaseBundle\Service\FileCollector
-        arguments: [ "@kernel" ]
-
-    agit.common.classcollector:
-        class: Agit\BaseBundle\Service\ClassCollector
-        arguments: [ "@agit.common.filecollector" ]
-
-    agit.common.url:
-        class: Agit\BaseBundle\Service\UrlService
-        arguments: [ "%agit.common.domain.app%", "%agit.common.domain.cdn%", "%agit.common.force.https%" ]
-
-    agit.cron:
-        class: Agit\BaseBundle\Service\CronService
-        arguments: [ "@event_dispatcher" ]
-
-imports :
-    - { resource: services.intl.yml }
-    - { resource: services.pluggable.yml }
+    # checks if a bundle has Twig templates, and prepares them for extraction
+    agit.intl.bundle.twig.collect:
+        class: Agit\IntlBundle\EventListener\TranslationTwigListener
+        arguments: [ @agit.common.filecollector, @twig ]
+        tags: [{ name: kernel.event_listener, event: agit.intl.files.register, method: onRegistration }]

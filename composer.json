@@ -1,7 +1,6 @@
 {
-    "name": "agitation/base-bundle",
+    "name": "agitation/intl-bundle",
     "type": "symfony-bundle",
-    "minimum-stability": "dev",
     "require": {
         "php": ">=5.4.9",
         "symfony/symfony": "2.8.*",
@@ -9,13 +8,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Agit\\BaseBundle\\": ""
+            "Agit\\IntlBundle\\": ""
         }
     },
     "license": "MIT",
     "authors": [
         {
-            "name": "AGITsol GmbH",
+            "name": "Alexander Günsche",
             "homepage": "http://www.agitsol.com/"
         }
     ]

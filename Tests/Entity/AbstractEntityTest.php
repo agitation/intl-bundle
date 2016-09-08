@@ -7,7 +7,7 @@
  * @license    http://opensource.org/licenses/MIT
  */
 
-namespace Agit\BaseBundle\Tests\Entity;
+namespace Agit\IntlBundle\Tests\Entity;
 
 class AbstractEntityTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,7 +27,7 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
     private function createMockEntity($mockName = null)
     {
         $mockInst = $this
-            ->getMockBuilder('\Agit\BaseBundle\Entity\IdentityAwareTrait')
+            ->getMockBuilder('\Agit\IntlBundle\Entity\IdentityAwareTrait')
             ->setMethods(['getId']);
 
         if ($mockName) {

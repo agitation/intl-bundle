@@ -7,9 +7,9 @@
  * @license    http://opensource.org/licenses/MIT
  */
 
-namespace Agit\BaseBundle\Event;
+namespace Agit\IntlBundle\Event;
 
-use Agit\BaseBundle\Command\TranslationCatalogCommand;
+use Agit\IntlBundle\Command\TranslationCatalogCommand;
 use Symfony\Component\EventDispatcher\Event;
 
 /**

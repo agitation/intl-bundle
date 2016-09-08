@@ -7,7 +7,7 @@
  * @license    http://opensource.org/licenses/MIT
  */
 
-namespace Agit\BaseBundle\Tests\Helper\_data;
+namespace Agit\IntlBundle\Tests\Helper\_data;
 
 class DummyFile1
 {

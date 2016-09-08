@@ -4,7 +4,7 @@ code in this package, unless noted differently for a single file or subdirectory
 ```
 The MIT license
 
-Copyright (c) 2012-2015 AGITsol GmbH
+Copyright (c) 2012-2017 AGITsol GmbH
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in

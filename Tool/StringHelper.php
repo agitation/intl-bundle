@@ -7,7 +7,7 @@
  * @license    http://opensource.org/licenses/MIT
  */
 
-namespace Agit\BaseBundle\Tool;
+namespace Agit\IntlBundle\Tool;
 
 class StringHelper
 {

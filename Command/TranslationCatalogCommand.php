@@ -7,10 +7,11 @@
  * @license    http://opensource.org/licenses/MIT
  */
 
-namespace Agit\BaseBundle\Command;
+namespace Agit\IntlBundle\Command;
 
-use Agit\BaseBundle\Event\TranslationCatalogEvent;
-use Agit\BaseBundle\Event\TranslationFilesEvent;
+use Agit\BaseBundle\Command\SingletonCommandTrait;
+use Agit\IntlBundle\Event\TranslationCatalogEvent;
+use Agit\IntlBundle\Event\TranslationFilesEvent;
 use Gettext\Translations;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;

@@ -7,9 +7,9 @@
  * @license    http://opensource.org/licenses/MIT
  */
 
-namespace Agit\BaseBundle\Tests\Service;
+namespace Agit\IntlBundle\Tests\Service;
 
-use Agit\BaseBundle\Service\CronService;
+use Agit\IntlBundle\Service\CronService;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class CronServiceTest extends \PHPUnit_Framework_TestCase
@@ -28,7 +28,7 @@ class CronServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testParseCronTimeException($cronTime)
     {
-        $this->setExpectedException('Agit\BaseBundle\Exception\InternalErrorException');
+        $this->setExpectedException('Agit\IntlBundle\Exception\InternalErrorException');
 
         $cronService = new CronService(new EventDispatcher());
         $cronService->parseCronTime($cronTime);

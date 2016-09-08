@@ -1,5 +1,4 @@
-# AgitBaseBundle
+# AgitIntlBundle
 
-The AgitBaseBundle is a Symfony2 bundle for the Agitation components. It
-contains some common classes and traits to be used by other Agitation and
-Tixys bundles.
+The AgitIntlBundle is a Symfony2 bundle which provides unified
+internationalization tools for PHP, Twig and JS.

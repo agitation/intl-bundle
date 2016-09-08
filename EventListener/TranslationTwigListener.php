@@ -7,10 +7,10 @@
  * @license    http://opensource.org/licenses/MIT
  */
 
-namespace Agit\BaseBundle\EventListener;
+namespace Agit\IntlBundle\EventListener;
 
-use Agit\BaseBundle\Event\TranslationFilesEvent;
-use Agit\BaseBundle\Service\FileCollector;
+use Agit\IntlBundle\Event\TranslationFilesEvent;
+use Agit\IntlBundle\Service\FileCollector;
 use Symfony\Component\Filesystem\Filesystem;
 
 class TranslationTwigListener

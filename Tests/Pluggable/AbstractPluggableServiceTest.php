@@ -7,9 +7,9 @@
  * @license    http://opensource.org/licenses/MIT
  */
 
-namespace Agit\BaseBundle\Tests\Pluggable;
+namespace Agit\IntlBundle\Tests\Pluggable;
 
-use Agit\BaseBundle\Pluggable\RegistrationData;
+use Agit\IntlBundle\Pluggable\RegistrationData;
 use Doctrine\Common\Cache\ArrayCache;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -28,7 +28,7 @@ class AbstractPluggableServiceTest extends \PHPUnit_Framework_TestCase
 
     private function createMockPluggableService($eventDispatcher, $cacheProvider)
     {
-        //         $pluggableService = $this->getMockBuilder('\Agit\BaseBundle\Pluggable\AbstractPluggableService')
+        //         $pluggableService = $this->getMockBuilder('\Agit\IntlBundle\Pluggable\AbstractPluggableService')
 //             ->setMethods(['getServiceTag', 'register'])
 //             ->getMock();
 //
