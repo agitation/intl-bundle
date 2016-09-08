@@ -1,8 +1,8 @@
 <?php
 
 $header = <<<"EOF"
-@package    agitation/base-bundle
-@link       http://github.com/agitation/base-bundle
+@package    agitation/intl-bundle
+@link       http://github.com/agitation/intl-bundle
 @author     Alexander Günsche
 @license    http://opensource.org/licenses/MIT
 EOF;
