@@ -1,8 +1,8 @@
 <?php
 
 /*
- * @package    agitation/base-bundle
- * @link       http://github.com/agitation/base-bundle
+ * @package    agitation/intl-bundle
+ * @link       http://github.com/agitation/intl-bundle
  * @author     Alexander Günsche
  * @license    http://opensource.org/licenses/MIT
  */
@@ -10,8 +10,9 @@
 namespace Agit\IntlBundle\Command;
 
 use Agit\BaseBundle\Command\SingletonCommandTrait;
-use Agit\IntlBundle\Event\TranslationCatalogEvent;
 use Agit\IntlBundle\Event\TranslationFilesEvent;
+use Agit\IntlBundle\Event\TranslationsEvent;
+use Gettext\Translation;
 use Gettext\Translations;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -38,7 +39,7 @@ class TranslationCatalogCommand extends ContainerAwareCommand
 
     private $extraSourceFiles = [];
 
-    private $extraCatalogFiles = [];
+    private $extraTranslations = [];
 
     protected function configure()
     {
@@ -152,9 +153,9 @@ class TranslationCatalogCommand extends ContainerAwareCommand
 
             $globalCatalog->addFromPoString($catalog);
 
-            if (isset($this->extraCatalogFiles[$locale])) {
-                foreach ($this->extraCatalogFiles[$locale] as $extraCatalogFile) {
-                    $globalCatalog->addFromPoFile($extraCatalogFile);
+            if (isset($this->extraTranslations[$locale])) {
+                foreach ($this->extraTranslations[$locale] as $translation) {
+                    $globalCatalog[] = $translation;
                 }
             }
 
@@ -178,13 +179,13 @@ class TranslationCatalogCommand extends ContainerAwareCommand
         $this->extraSourceFiles[$alias] = $path;
     }
 
-    public function registerCatalogFile($locale, $path)
+    public function addTranslation($locale, Translation $translation)
     {
-        if (! isset($this->extraCatalogFiles[$locale])) {
-            $this->extraCatalogFiles[$locale] = [];
+        if (! isset($this->extraTranslations[$locale])) {
+            $this->extraTranslations[$locale] = [];
         }
 
-        $this->extraCatalogFiles[$locale][] = $path;
+        $this->extraTranslations[$locale][] = $translation;
     }
 
     private function dispatchRegistrationEvents($bundleAlias)
@@ -196,7 +197,7 @@ class TranslationCatalogCommand extends ContainerAwareCommand
             new TranslationFilesEvent($this, $bundleAlias, $this->cacheBasePath));
 
         $eventDispatcher->dispatch(
-            "agit.intl.catalog.register",
-            new TranslationCatalogEvent($this, $this->cacheBasePath));
+            "agit.intl.translations.register",
+            new TranslationsEvent($this));
     }
 }
