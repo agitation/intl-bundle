@@ -9,9 +9,10 @@
 
 namespace Agit\IntlBundle\Command;
 
-use Agit\BaseBundle\Command\SingletonCommandTrait;
+use Exception;
 use Agit\IntlBundle\Event\TranslationFilesEvent;
 use Agit\IntlBundle\Event\TranslationsEvent;
+use Agit\IntlBundle\Tool\Translate;
 use Gettext\Translation;
 use Gettext\Translations;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -21,10 +22,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
-class TranslationCatalogCommand extends ContainerAwareCommand
+class BundleCatalogCommand extends ContainerAwareCommand
 {
-    use SingletonCommandTrait;
-
     private $catalogSubdir = "Resources/translations";
 
     private $frontendSubdir = "Resources/public/js/var";
@@ -39,33 +38,29 @@ class TranslationCatalogCommand extends ContainerAwareCommand
 
     private $extraSourceFiles = [];
 
-    private $extraTranslations = [];
-
     protected function configure()
     {
         $this
-            ->setName("agit:intl:catalogs")
+            ->setName("agit:translations:bundle")
             ->setDescription("Extract translatable strings in a bundle’s into .po and .json files, then add/merge them to the global catalogs.")
-            ->addArgument("bundle", InputArgument::REQUIRED, "bundle alias, e.g. AcmeFoobarBundle");
+            ->addArgument("bundle", InputArgument::REQUIRED, "bundle alias, e.g. AcmeFoobarBundle.")
+            ->addArgument("locales", InputArgument::OPTIONAL, "Comma-separated list of locales supported by the bundle. Optional; if empty, locales from parameters.yml will be used.");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (! $this->flock(__FILE__)) {
-            return;
-        }
-
         $container = $this->getContainer();
         $filesystem = new Filesystem();
+
         $bundleAlias = $input->getArgument("bundle");
         $bundlePath = $container->get("agit.common.filecollector")->resolve($bundleAlias);
-        $globalCatalogPath = $container->getParameter("kernel.root_dir") . "/$this->catalogSubdir";
+
         $defaultLocale = $container->get("agit.intl.locale")->getDefaultLocale();
+        $locales = array_map("trim", explode(",", (string)$input->getArgument("locales"))) ?: $container->getParameter("agit.intl.locales");
+
+        $globalCatalogPath = $container->getParameter("kernel.root_dir") . "/$this->catalogSubdir";
         $this->cacheBasePath = sprintf("%s/agit.intl.temp/%s", sys_get_temp_dir(), $bundleAlias);
-
         $filesystem->mkdir($this->cacheBasePath);
-
-        // collect files
 
         $finder = (new Finder())->in("$bundlePath")
             ->name("*\.php")
@@ -81,7 +76,11 @@ class TranslationCatalogCommand extends ContainerAwareCommand
             $files[$alias] = $filePath;
         }
 
-        $this->dispatchRegistrationEvents($bundleAlias);
+        $this->getContainer()->get("event_dispatcher")->dispatch(
+            "agit.intl.files.register",
+            new TranslationFilesEvent($this, $bundleAlias, $this->cacheBasePath)
+        );
+
         $files += $this->extraSourceFiles;
 
         $frontendFiles = array_filter($files, function ($file) { return preg_match("|\.js$|", $file); });
@@ -89,9 +88,13 @@ class TranslationCatalogCommand extends ContainerAwareCommand
 
         $frontendCatalogs = "";
 
-        foreach ($container->getParameter("agit.intl.locales") as $locale) {
+        foreach ($locales as $locale) {
+
+            if (!preg_match("|^[a-z]{2}_[A-Z]{2}|", $locale))
+                throw new Exception("Invlid locale: $locale");
+
+            // we use the global catalog as source for already translated strings
             $globalCatalogFile = "$globalCatalogPath/$locale/LC_MESSAGES/agit.po";
-            $globalCatalogMoFile = "$globalCatalogPath/$locale/LC_MESSAGES/agit.mo";
             $globalCatalog = $filesystem->exists($globalCatalogFile)
                 ? Translations::fromPoFile($globalCatalogFile)
                 : new Translations();
@@ -101,7 +104,7 @@ class TranslationCatalogCommand extends ContainerAwareCommand
                 ? Translations::fromPoFile($bundleCatalogFile)
                 : new Translations();
 
-            // NOTE: we delete all headers and only set language in order to avoid garbage commits
+            // NOTE: we delete all headers and only set language, in order to avoid garbage commits
             $bundleCatalog = new Translations();
             $bundleCatalog->deleteHeaders();
             $bundleCatalog->setLanguage($locale);
@@ -148,23 +151,6 @@ class TranslationCatalogCommand extends ContainerAwareCommand
             if ($bundleCatalog->count()) {
                 $filesystem->dumpFile("$bundlePath/$this->catalogSubdir/bundle.$locale.po", $catalog);
             }
-
-            // finally, create the global catalog
-
-            $globalCatalog->addFromPoString($catalog);
-
-            if (isset($this->extraTranslations[$locale])) {
-                foreach ($this->extraTranslations[$locale] as $translation) {
-                    $globalCatalog[] = $translation;
-                }
-            }
-
-            // NOTE: we delete all headers and only set language in order to avoid garbage commits
-            $globalCatalog->deleteHeaders();
-            $globalCatalog->setLanguage($locale);
-            $globalCatalog->setHeader("Content-Type", "text/plain; charset=UTF-8");
-            $globalCatalog->toPoFile($globalCatalogFile);
-            $globalCatalog->toMoFile($globalCatalogMoFile);
         }
 
         if ($frontendCatalogs) {
@@ -177,27 +163,5 @@ class TranslationCatalogCommand extends ContainerAwareCommand
     public function registerSourceFile($alias, $path)
     {
         $this->extraSourceFiles[$alias] = $path;
-    }
-
-    public function addTranslation($locale, Translation $translation)
-    {
-        if (! isset($this->extraTranslations[$locale])) {
-            $this->extraTranslations[$locale] = [];
-        }
-
-        $this->extraTranslations[$locale][] = $translation;
-    }
-
-    private function dispatchRegistrationEvents($bundleAlias)
-    {
-        $eventDispatcher = $this->getContainer()->get("event_dispatcher");
-
-        $eventDispatcher->dispatch(
-            "agit.intl.files.register",
-            new TranslationFilesEvent($this, $bundleAlias, $this->cacheBasePath));
-
-        $eventDispatcher->dispatch(
-            "agit.intl.translations.register",
-            new TranslationsEvent($this));
     }
 }

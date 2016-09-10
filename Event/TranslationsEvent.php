@@ -9,7 +9,7 @@
 
 namespace Agit\IntlBundle\Event;
 
-use Agit\IntlBundle\Command\TranslationCatalogCommand;
+use Agit\IntlBundle\Command\GlobalCatalogCommand;
 use Gettext\Translation;
 use Symfony\Component\EventDispatcher\Event;
 
@@ -22,7 +22,7 @@ class TranslationsEvent extends Event
 {
     private $processor;
 
-    public function __construct(TranslationCatalogCommand $processor)
+    public function __construct(GlobalCatalogCommand $processor)
     {
         $this->processor = $processor;
     }

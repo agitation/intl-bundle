@@ -9,7 +9,7 @@
 
 namespace Agit\IntlBundle\Event;
 
-use Agit\IntlBundle\Command\TranslationCatalogCommand;
+use Agit\IntlBundle\Command\BundleCatalogCommand;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -26,7 +26,7 @@ class TranslationFilesEvent extends Event
 
     private $cacheBasePath;
 
-    public function __construct(TranslationCatalogCommand $processor, $bundleAlias, $cacheBasePath)
+    public function __construct(BundleCatalogCommand $processor, $bundleAlias, $cacheBasePath)
     {
         $this->bundleAlias = $bundleAlias;
         $this->processor = $processor;
