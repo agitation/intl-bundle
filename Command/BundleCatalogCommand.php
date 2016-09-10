@@ -56,7 +56,10 @@ class BundleCatalogCommand extends ContainerAwareCommand
         $bundlePath = $container->get("agit.common.filecollector")->resolve($bundleAlias);
 
         $defaultLocale = $container->get("agit.intl.locale")->getDefaultLocale();
-        $locales = array_map("trim", explode(",", (string)$input->getArgument("locales"))) ?: $container->getParameter("agit.intl.locales");
+
+        $locales = $input->getArgument("locales")
+            ? array_map("trim", explode(",", $input->getArgument("locales")))
+            : $container->getParameter("agit.intl.locales");
 
         $globalCatalogPath = $container->getParameter("kernel.root_dir") . "/$this->catalogSubdir";
         $this->cacheBasePath = sprintf("%s/agit.intl.temp/%s", sys_get_temp_dir(), $bundleAlias);
@@ -91,7 +94,7 @@ class BundleCatalogCommand extends ContainerAwareCommand
         foreach ($locales as $locale) {
 
             if (!preg_match("|^[a-z]{2}_[A-Z]{2}|", $locale))
-                throw new Exception("Invlid locale: $locale");
+                throw new Exception("Invalid locale: $locale");
 
             // we use the global catalog as source for already translated strings
             $globalCatalogFile = "$globalCatalogPath/$locale/LC_MESSAGES/agit.po";
