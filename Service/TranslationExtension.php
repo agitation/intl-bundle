@@ -11,7 +11,7 @@ namespace Agit\IntlBundle\Service;
 
 use Agit\IntlBundle\Tool\Translate;
 use Twig_Extension;
-use Twig_Function_Method;
+use Twig_SimpleFunction;
 
 class TranslationExtension extends Twig_Extension
 {
@@ -28,11 +28,11 @@ class TranslationExtension extends Twig_Extension
     public function getFunctions()
     {
         return [
-            "t"                => new Twig_Function_Method($this, "t",  ["is_safe" => ["all"]]),
-            "n"                => new Twig_Function_Method($this, "n",  ["is_safe" => ["all"]]),
-            "x"                => new Twig_Function_Method($this, "x",  ["is_safe" => ["all"]]),
-            "ts"               => new Twig_Function_Method($this, "ts", ["is_safe" => ["all"]]),
-            "getActiveLocales" => new Twig_Function_Method($this, "getActiveLocales")
+            new Twig_SimpleFunction("t", [$this, "t"],  ["is_safe" => ["all"]]),
+            new Twig_SimpleFunction("n", [$this, "n"],  ["is_safe" => ["all"]]),
+            new Twig_SimpleFunction("x", [$this, "x"],  ["is_safe" => ["all"]]),
+            new Twig_SimpleFunction("ts", [$this, "ts"], ["is_safe" => ["all"]]),
+            new Twig_SimpleFunction("getActiveLocales", [$this, "getActiveLocales"])
 
         ];
     }
