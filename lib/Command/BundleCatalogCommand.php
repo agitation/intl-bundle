@@ -99,12 +99,12 @@ class BundleCatalogCommand extends ContainerAwareCommand
             // we use the global catalog as source for already translated strings
             $globalCatalogFile = "$globalCatalogPath/$locale/LC_MESSAGES/agit.po";
             $globalCatalog = $filesystem->exists($globalCatalogFile)
-                ? Translations::fromPoFile($globalCatalogFile)
+                ? $this->deleteReferences(Translations::fromPoFile($globalCatalogFile))
                 : new Translations();
 
             $bundleCatalogFile = "$bundlePath/$this->catalogSubdir/bundle.$locale.po";
             $oldBundleCatalog = ($filesystem->exists($bundleCatalogFile))
-                ? Translations::fromPoFile($bundleCatalogFile)
+                ? $this->deleteReferences(Translations::fromPoFile($bundleCatalogFile))
                 : new Translations();
 
             // NOTE: we delete all headers and only set language, in order to avoid garbage commits
@@ -166,5 +166,13 @@ class BundleCatalogCommand extends ContainerAwareCommand
     public function registerSourceFile($alias, $path)
     {
         $this->extraSourceFiles[$alias] = $path;
+    }
+
+    private function deleteReferences(Translations $catalog)
+    {
+        foreach ($catalog as $translation)
+            $translation->deleteReferences();
+
+        return $catalog;
     }
 }
