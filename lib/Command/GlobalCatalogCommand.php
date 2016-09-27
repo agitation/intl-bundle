@@ -50,6 +50,18 @@ class GlobalCatalogCommand extends ContainerAwareCommand
         foreach ($container->getParameter("agit.intl.locales") as $locale) {
             $catalog = new Translations();
 
+            $messagesPath = "$catalogPath/$locale/LC_MESSAGES";
+
+            $catalogFile = "$messagesPath/agit.po";
+            $oldCatalog = $filesystem->exists($catalogFile)
+                    ? Translations::fromPoFile($catalogFile)
+                    : new Translations();
+
+            foreach ($oldCatalog as $translation)
+                $translation->deleteReferences();
+
+            $catalog->mergeWith($oldCatalog, 0);
+
             foreach ($bundles as $alias => $namespace) {
                 $bundlePath = $locator->resolve($alias);
                 $bundleCatalogFile = "$bundlePath/$this->catalogSubdir/bundle.$locale.po";
@@ -72,8 +84,7 @@ class GlobalCatalogCommand extends ContainerAwareCommand
             $catalog->setLanguage($locale);
             $catalog->setHeader("Content-Type", "text/plain; charset=UTF-8");
 
-            $messagesPath = "$catalogPath/$locale/LC_MESSAGES";
-            $filesystem->dumpFile("$messagesPath/agit.po", $catalog->toPoString());
+            $filesystem->dumpFile($catalogFile, $catalog->toPoString());
             $filesystem->dumpFile("$messagesPath/agit.mo", $catalog->toMoString());
         }
     }
