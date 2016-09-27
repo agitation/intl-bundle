@@ -11,6 +11,7 @@ namespace Agit\IntlBundle\Service;
 
 use Agit\IntlBundle\Exception\InternalErrorException;
 use Agit\IntlBundle\Tool\Translate;
+use Agit\SettingBundle\Event\SettingsLoadedEvent;
 use Agit\SettingBundle\Service\SettingService;
 
 class LocaleConfigService
@@ -37,5 +38,11 @@ class LocaleConfigService
         return ($this->settingService)
             ? $this->settingService->getValueOf("agit.user_locales")
             : $this->localeService->getAvaliableLocales();
+    }
+
+    public function settingsLoaded(SettingsLoadedEvent $event)
+    {
+        $internalLocale = $event->getSettingService()->getValueOf("agit.internal_locale");
+        Translate::_setAppLocale($internalLocale);
     }
 }
