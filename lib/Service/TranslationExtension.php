@@ -15,11 +15,11 @@ use Twig_SimpleFunction;
 
 class TranslationExtension extends Twig_Extension
 {
-    private $localeService;
+    private $localeConfigService;
 
-    public function __construct(LocaleService $localeService)
+    public function __construct(LocaleConfigService $localeConfigService)
     {
-        $this->localeService = $localeService;
+        $this->localeConfigService = $localeConfigService;
     }
 
     /**
@@ -72,6 +72,6 @@ class TranslationExtension extends Twig_Extension
 
     public function getActiveLocales()
     {
-        return $this->localeService->getActiveLocales();
+        return $this->localeConfigService->getActiveLocales();
     }
 }

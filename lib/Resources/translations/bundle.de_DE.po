@@ -1,0 +1,16 @@
+msgid ""
+msgstr ""
+"Language: de_DE\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: @AgitIntlBundle/Setting/UserLocalesSetting.php:24
+msgid "User languages"
+msgstr ""
+
+#: @AgitIntlBundle/Setting/UserLocalesSetting.php:37
+msgid "You must select at least one user language."
+msgstr ""
+
+#: @AgitIntlBundle/Setting/InternalLocaleSetting.php:23
+msgid "Internal language"
+msgstr ""

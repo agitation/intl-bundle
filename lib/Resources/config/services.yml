@@ -1,16 +1,33 @@
 services:
     agit.intl.locale:
         class: Agit\IntlBundle\Service\LocaleService
-        arguments: [ "@?agit.intl.localeconfig", "%agit.intl.locales%", "%kernel.root_dir%/Resources/translations", "agit" ]
+        arguments: [ "%agit.intl.locales%", "%kernel.root_dir%/Resources/translations", "agit" ]
+
+    agit.intl.config:
+        class: Agit\IntlBundle\Service\LocaleConfigService
+        arguments: [ "@agit.intl.locale", "@?agit.setting" ]
 
     # (Optional) Twig extension for template text block translations
     agit.intl.twig.translation:
         class: Agit\IntlBundle\Service\TranslationExtension
-        arguments: [ "@agit.intl.locale" ]
+        arguments: [ "@agit.intl.config" ]
         tags: [{ name: twig.extension }]
 
     # checks if a bundle has Twig templates, and prepares them for extraction
     agit.intl.bundle.twig.collect:
         class: Agit\IntlBundle\EventListener\TranslationTwigListener
-        arguments: [ @agit.common.filecollector, @twig ]
+        arguments: [ "@agit.common.filecollector", "@twig" ]
         tags: [{ name: kernel.event_listener, event: agit.intl.files.register, method: onRegistration }]
+
+
+    # settings (optional, will only be used if setting-bundle is installed)
+
+    agit.setting.internal_locale:
+        class: Agit\IntlBundle\Setting\InternalLocaleSetting
+        arguments: [ "@agit.intl.locale", "@agit.validation" ]
+        tags: [{ name: agit.setting }]
+
+    agit.setting.available_locales:
+        class: Agit\IntlBundle\Setting\UserLocalesSetting
+        arguments: [ "@agit.intl.locale", "@agit.validation" ]
+        tags: [{ name: agit.setting }]
