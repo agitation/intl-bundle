@@ -87,6 +87,8 @@ class BundleCatalogCommand extends ContainerAwareCommand
             new BundleTranslationFilesEvent($this, $bundleAlias, $this->cacheBasePath)
         );
 
+        $this->extraTranslations = new Translations();
+
         $this->getContainer()->get("event_dispatcher")->dispatch(
             "agit.intl.bundle.translations",
             new BundleTranslationsEvent($this, $bundleAlias)
@@ -153,9 +155,9 @@ class BundleCatalogCommand extends ContainerAwareCommand
                 $bundleCatalog->addFromPhpCodeFile($file, $this->extractorOptions);
             }
 
+            $bundleCatalog->mergeWith($this->extraTranslations, Merge::ADD);
             $bundleCatalog->mergeWith($oldBundleCatalog, 0);
             $bundleCatalog->mergeWith($globalCatalog, 0);
-            $bundleCatalog->mergeWith($this->extraTranslations, Merge::ADD);
 
             $catalog = $bundleCatalog->toPoString();
             $catalog = str_replace(array_values($files), array_keys($files), $catalog);
@@ -179,10 +181,6 @@ class BundleCatalogCommand extends ContainerAwareCommand
 
     public function addTranslation(Translation $translation)
     {
-        if (! $this->extraTranslations) {
-            $this->extraTranslations = new Translations();
-        }
-
         $this->extraTranslations[] = $translation;
     }
 
