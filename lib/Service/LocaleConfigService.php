@@ -37,7 +37,7 @@ class LocaleConfigService
     {
         return ($this->settingService)
             ? $this->settingService->getValueOf("agit.user_locales")
-            : $this->localeService->getAvaliableLocales();
+            : $this->localeService->getAvailableLocales();
     }
 
     public function settingsLoaded(SettingsLoadedEvent $event)
