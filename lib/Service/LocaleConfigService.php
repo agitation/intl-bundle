@@ -9,7 +9,6 @@
 
 namespace Agit\IntlBundle\Service;
 
-use Agit\IntlBundle\Exception\InternalErrorException;
 use Agit\IntlBundle\Tool\Translate;
 use Agit\SettingBundle\Event\SettingsLoadedEvent;
 use Agit\SettingBundle\Service\SettingService;

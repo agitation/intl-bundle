@@ -33,8 +33,9 @@ class UserLocalesSetting extends AbstractLocaleSetting
     {
         $this->validationService->validate("array", $value);
 
-        if (!count($value))
+        if (! count($value)) {
             throw new InvalidSettingValueException(Translate::t("You must select at least one user language."));
+        }
 
         $this->validationService->validate(
             "multiSelection",

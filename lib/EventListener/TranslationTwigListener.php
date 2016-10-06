@@ -10,7 +10,7 @@
 namespace Agit\IntlBundle\EventListener;
 
 use Agit\BaseBundle\Service\FileCollector;
-use Agit\IntlBundle\Event\TranslationFilesEvent;
+use Agit\IntlBundle\Event\BundleTranslationFilesEvent;
 use Symfony\Component\Filesystem\Filesystem;
 
 class TranslationTwigListener
@@ -27,7 +27,7 @@ class TranslationTwigListener
         $this->twig = $twig;
     }
 
-    public function onRegistration(TranslationFilesEvent $event)
+    public function onRegistration(BundleTranslationFilesEvent $event)
     {
         $bundleAlias = $event->getBundleAlias();
         $tplDir = $this->fileCollector->resolve($bundleAlias);

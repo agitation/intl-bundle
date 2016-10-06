@@ -18,7 +18,7 @@ services:
     agit.intl.bundle.twig.collect:
         class: Agit\IntlBundle\EventListener\TranslationTwigListener
         arguments: [ "@agit.common.filecollector", "@twig" ]
-        tags: [{ name: kernel.event_listener, event: agit.intl.files.register, method: onRegistration }]
+        tags: [{ name: kernel.event_listener, event: agit.intl.bundle.files, method: onRegistration }]
 
 
     # settings (optional, will only be used if setting-bundle is installed)

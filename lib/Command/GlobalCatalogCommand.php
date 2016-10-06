@@ -9,17 +9,14 @@
 
 namespace Agit\IntlBundle\Command;
 
-use Agit\IntlBundle\Event\TranslationFilesEvent;
 use Agit\IntlBundle\Event\TranslationsEvent;
 use Gettext\Merge;
 use Gettext\Translation;
 use Gettext\Translations;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
 
 class GlobalCatalogCommand extends ContainerAwareCommand
 {
@@ -44,7 +41,7 @@ class GlobalCatalogCommand extends ContainerAwareCommand
         $catalogPath = $container->getParameter("kernel.root_dir") . "/$this->catalogSubdir";
 
         $this->getContainer()->get("event_dispatcher")->dispatch(
-            "agit.intl.translations.register",
+            "agit.intl.global.translations",
             new TranslationsEvent($this));
 
         foreach ($container->getParameter("agit.intl.locales") as $locale) {
@@ -57,8 +54,9 @@ class GlobalCatalogCommand extends ContainerAwareCommand
                     ? Translations::fromPoFile($catalogFile)
                     : new Translations();
 
-            foreach ($oldCatalog as $translation)
+            foreach ($oldCatalog as $translation) {
                 $translation->deleteReferences();
+            }
 
             $catalog->mergeWith($oldCatalog, 0);
 

@@ -9,9 +9,9 @@
 
 namespace Agit\IntlBundle\Setting;
 
+use Agit\IntlBundle\Service\LocaleService;
 use Agit\SettingBundle\Service\AbstractSetting;
 use Agit\ValidationBundle\ValidationService;
-use Agit\IntlBundle\Service\LocaleService;
 
 abstract class AbstractLocaleSetting extends AbstractSetting
 {

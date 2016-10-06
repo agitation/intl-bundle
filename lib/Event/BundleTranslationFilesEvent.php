@@ -18,7 +18,7 @@ use Symfony\Component\EventDispatcher\Event;
  * method. A listener can store temporary files under the cacheBasePath, they
  * be cleaned up automatically after processing.
  */
-class TranslationFilesEvent extends Event
+class BundleTranslationFilesEvent extends Event
 {
     private $bundleAlias;
 

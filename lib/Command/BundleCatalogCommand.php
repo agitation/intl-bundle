@@ -9,12 +9,13 @@
 
 namespace Agit\IntlBundle\Command;
 
+use Agit\IntlBundle\Event\BundleTranslationFilesEvent;
+use Agit\IntlBundle\Event\BundleTranslationsEvent;
 use Exception;
-use Agit\IntlBundle\Event\TranslationFilesEvent;
-use Agit\IntlBundle\Event\TranslationsEvent;
-use Agit\IntlBundle\Tool\Translate;
+use Gettext\Merge;
 use Gettext\Translation;
 use Gettext\Translations;
+use Sensio\Bundle\GeneratorBundle\Model\Bundle;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -27,6 +28,8 @@ class BundleCatalogCommand extends ContainerAwareCommand
     private $catalogSubdir = "Resources/translations";
 
     private $frontendSubdir = "Resources/public/js/var";
+
+    private $extraTranslations;
 
     private $cacheBasePath;
 
@@ -80,8 +83,13 @@ class BundleCatalogCommand extends ContainerAwareCommand
         }
 
         $this->getContainer()->get("event_dispatcher")->dispatch(
-            "agit.intl.files.register",
-            new TranslationFilesEvent($this, $bundleAlias, $this->cacheBasePath)
+            "agit.intl.bundle.files",
+            new BundleTranslationFilesEvent($this, $bundleAlias, $this->cacheBasePath)
+        );
+
+        $this->getContainer()->get("event_dispatcher")->dispatch(
+            "agit.intl.bundle.translations",
+            new BundleTranslationsEvent($this, $bundleAlias)
         );
 
         $files += $this->extraSourceFiles;
@@ -92,9 +100,9 @@ class BundleCatalogCommand extends ContainerAwareCommand
         $frontendCatalogs = "";
 
         foreach ($locales as $locale) {
-
-            if (!preg_match("|^[a-z]{2}_[A-Z]{2}|", $locale))
+            if (! preg_match("|^[a-z]{2}_[A-Z]{2}|", $locale)) {
                 throw new Exception("Invalid locale: $locale");
+            }
 
             // we use the global catalog as source for already translated strings
             $globalCatalogFile = "$globalCatalogPath/$locale/LC_MESSAGES/agit.po";
@@ -147,6 +155,7 @@ class BundleCatalogCommand extends ContainerAwareCommand
 
             $bundleCatalog->mergeWith($oldBundleCatalog, 0);
             $bundleCatalog->mergeWith($globalCatalog, 0);
+            $bundleCatalog->mergeWith($this->extraTranslations, Merge::ADD);
 
             $catalog = $bundleCatalog->toPoString();
             $catalog = str_replace(array_values($files), array_keys($files), $catalog);
@@ -168,10 +177,20 @@ class BundleCatalogCommand extends ContainerAwareCommand
         $this->extraSourceFiles[$alias] = $path;
     }
 
+    public function addTranslation(Translation $translation)
+    {
+        if (! $this->extraTranslations) {
+            $this->extraTranslations = new Translations();
+        }
+
+        $this->extraTranslations[] = $translation;
+    }
+
     private function deleteReferences(Translations $catalog)
     {
-        foreach ($catalog as $translation)
+        foreach ($catalog as $translation) {
             $translation->deleteReferences();
+        }
 
         return $catalog;
     }
