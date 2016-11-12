@@ -6,6 +6,9 @@
         "symfony/symfony": "2.8.*",
         "gettext/gettext" : "~4.0"
     },
+    "require-dev": {
+        "agitation/cldr-bundle" : "dev-master"
+    },
     "suggest": {
         "agitation/setting-bundle": "Can be used to make the internal locale and the user locales configurable."
     },

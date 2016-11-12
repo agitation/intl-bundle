@@ -15,33 +15,31 @@ class Date
 {
     public static function getMonthNames()
     {
-        return [ Translate::t("January"), Translate::t("February"), Translate::t("March"),
+        return [Translate::t("January"), Translate::t("February"), Translate::t("March"),
                 Translate::t("April"), Translate::t("May"), Translate::t("June"),
                 Translate::t("July"), Translate::t("August"), Translate::t("September"),
-                Translate::t("October"), Translate::t("November"), Translate::t("December") ];
+                Translate::t("October"), Translate::t("November"), Translate::t("December")];
     }
 
     public static function getShortMonthNames()
     {
-        return [ Translate::t("Jan"), Translate::t("Feb"), Translate::t("Mar"), Translate::t("Apr"),
+        return [Translate::t("Jan"), Translate::t("Feb"), Translate::t("Mar"), Translate::t("Apr"),
                 Translate::t("May"), Translate::t("Jun"), Translate::t("Jul"), Translate::t("Aug"),
-                Translate::t("Sep"), Translate::t("Oct"), Translate::t("Nov"), Translate::t("Dec") ];
+                Translate::t("Sep"), Translate::t("Oct"), Translate::t("Nov"), Translate::t("Dec")];
     }
 
     public static function getWeekdayNames()
     {
-        return [ Translate::t("Sunday"), Translate::t("Monday"), Translate::t("Tuesday"),
+        return [Translate::t("Sunday"), Translate::t("Monday"), Translate::t("Tuesday"),
                 Translate::t("Wednesday"), Translate::t("Thursday"),
-                Translate::t("Friday"), Translate::t("Saturday") ];
+                Translate::t("Friday"), Translate::t("Saturday")];
     }
 
     public static function getShortWeekdayNames()
     {
-        return [ Translate::t("Sun"), Translate::t("Mon"), Translate::t("Tue"), Translate::t("Wed"),
-                Translate::t("Thu"), Translate::t("Fri"), Translate::t("Sat") ];
+        return [Translate::t("Sun"), Translate::t("Mon"), Translate::t("Tue"), Translate::t("Wed"),
+                Translate::t("Thu"), Translate::t("Fri"), Translate::t("Sat")];
     }
-
-
 
     public static function getMonthName($id)
     {
@@ -63,11 +61,9 @@ class Date
         return self::getShortWeekdayNames()[$id];
     }
 
-
-
     public static function getFirstDayOfWeek()
     {
-        return (int)Translate::x("first day of week; 0: Sunday, 1: Monday", "0");
+        return (int) Translate::x("first day of week; 0: Sunday, 1: Monday", "0");
     }
 
     public static function format(DateTimeInterface $dateTime, $format)

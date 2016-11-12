@@ -14,6 +14,12 @@ services:
         arguments: [ "@agit.intl.config" ]
         tags: [{ name: twig.extension }]
 
+    # adds translations for month and weekday names from CLDR
+    agit.intl.bundle.twig.cldr:
+        class: Agit\IntlBundle\EventListener\TranslationCldrListener
+        arguments: [ "@agit.intl.locale", "@agit.cldr.adapter.time" ]
+        tags: [{ name: kernel.event_listener, event: agit.intl.bundle.catalog, method: onRegistration }]
+
     # checks if a bundle has Twig templates, and prepares them for extraction
     agit.intl.bundle.twig.collect:
         class: Agit\IntlBundle\EventListener\TranslationTwigListener
