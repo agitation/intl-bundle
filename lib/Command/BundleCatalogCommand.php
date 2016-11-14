@@ -145,7 +145,7 @@ class BundleCatalogCommand extends ContainerAwareCommand
 
                 $frontendCatalogs .= sprintf("ag.intl.register(\"%s\", %s);\n\n",
                     $locale,
-                    json_encode($transMap, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+                    json_encode($transMap, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
                 );
             }
 
