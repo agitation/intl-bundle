@@ -79,7 +79,7 @@ class BundleCatalogCommand extends ContainerAwareCommand
         foreach ($finder as $file) {
             $filePath = $file->getRealpath();
             $alias = str_replace($bundlePath, "@$bundleAlias/", $filePath);
-            $files[$alias] = $filePath;
+            $files[$filePath] = $alias;
         }
 
         $this->getContainer()->get("event_dispatcher")->dispatch(
@@ -96,8 +96,8 @@ class BundleCatalogCommand extends ContainerAwareCommand
 
         $files += $this->extraSourceFiles;
 
-        $frontendFiles = array_filter($files, function ($file) { return preg_match("|\.js$|", $file); });
-        $backendFiles = array_filter($files, function ($file) { return ! preg_match("|\.js$|", $file); });
+        $frontendFiles = array_filter(array_keys($files), function ($file) { return preg_match("|\.js$|", $file); });
+        $backendFiles = array_filter(array_keys($files), function ($file) { return ! preg_match("|\.js$|", $file); });
 
         $frontendCatalogs = "";
 
@@ -160,7 +160,7 @@ class BundleCatalogCommand extends ContainerAwareCommand
             $bundleCatalog->mergeWith($globalCatalog, 0);
 
             $catalog = $bundleCatalog->toPoString();
-            $catalog = str_replace(array_values($files), array_keys($files), $catalog);
+            $catalog = str_replace(array_keys($files), array_values($files), $catalog);
 
             if ($bundleCatalog->count()) {
                 $filesystem->dumpFile("$bundlePath/$this->catalogSubdir/bundle.$locale.po", $catalog);
@@ -176,7 +176,7 @@ class BundleCatalogCommand extends ContainerAwareCommand
 
     public function registerSourceFile($alias, $path)
     {
-        $this->extraSourceFiles[$alias] = $path;
+        $this->extraSourceFiles[$path] = $alias;
     }
 
     public function addTranslation(Translation $translation)
