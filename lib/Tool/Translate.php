@@ -12,9 +12,9 @@ namespace Agit\IntlBundle\Tool;
 class Translate
 {
     // used internally to store the currently set locale
-    private static $locale = "en_GB";
+    private static $locale = "en_US";
 
-    private static $appLocale = "en_GB";
+    private static $appLocale = "en_US";
 
     public static function getLocale()
     {
@@ -112,7 +112,7 @@ class Translate
     {
         putenv("LANGUAGE=$locale.UTF-8"); // for CLI
         setlocale(LC_ALL, "$locale.utf8");
-        setlocale(LC_NUMERIC, "en_GB.utf8"); // avoid strange results with floats in sprintf
+        setlocale(LC_NUMERIC, "en_US.utf8"); // avoid strange results with floats in sprintf
         self::$locale = $locale;
     }
 

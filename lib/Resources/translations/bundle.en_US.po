@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Language: en_GB\n"
+"Language: en_US\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: @AgitIntlBundle/Tool/Date.php:18

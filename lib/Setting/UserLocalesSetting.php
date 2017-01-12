@@ -26,7 +26,7 @@ class UserLocalesSetting extends AbstractLocaleSetting
 
     public function getDefaultValue()
     {
-        return ["en_GB"];
+        return ["en_US"];
     }
 
     public function validate($value)

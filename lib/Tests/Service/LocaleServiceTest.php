@@ -16,13 +16,13 @@ class LocaleServiceTest extends \PHPUnit_Framework_TestCase
     public function testGetDefaultLocale()
     {
         $localeService = $this->createLocaleService();
-        $this->assertSame('en_GB', $localeService->getDefaultLocale());
+        $this->assertSame('en_US', $localeService->getDefaultLocale());
     }
 
     public function testGetAvailableLocales()
     {
         $localeService = $this->createLocaleService();
-        $this->assertSame(['en_GB', 'de_DE'], $localeService->getAvailableLocales());
+        $this->assertSame(['en_US', 'de_DE'], $localeService->getAvailableLocales());
     }
 
     public function testSetLocale()
@@ -41,6 +41,6 @@ class LocaleServiceTest extends \PHPUnit_Framework_TestCase
 
     private function createLocaleService()
     {
-        return new LocaleService(['en_GB', 'de_DE'], '/tmp/does/not/exist', 'foobar');
+        return new LocaleService(['en_US', 'de_DE'], '/tmp/does/not/exist', 'foobar');
     }
 }

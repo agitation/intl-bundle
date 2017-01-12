@@ -15,7 +15,7 @@ use Locale;
 
 class LocaleService
 {
-    private $defaultLocale = "en_GB";
+    private $defaultLocale = "en_US";
 
     private $currentLocale;
 
