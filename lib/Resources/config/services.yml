@@ -1,7 +1,10 @@
+parameters:
+    agit.intl.catalog_dir: "%kernel.cache_dir%/agit/intl"
+
 services:
     agit.intl.locale:
         class: Agit\IntlBundle\Service\LocaleService
-        arguments: [ "%agit.intl.locales%", "%kernel.root_dir%/Resources/translations", "agit" ]
+        arguments: [ "%agit.intl.locales%", "%agit.intl.catalog_dir%", "agit" ]
 
     agit.intl.config:
         class: Agit\IntlBundle\Service\LocaleConfigService
@@ -16,15 +19,25 @@ services:
 
     # adds translations for month and weekday names from CLDR
     agit.intl.bundle.twig.cldr:
+        private: true
         class: Agit\IntlBundle\EventListener\TranslationCldrListener
         arguments: [ "@agit.intl.locale", "@agit.cldr.adapter.time" ]
         tags: [{ name: kernel.event_listener, event: agit.intl.bundle.catalog, method: onRegistration }]
 
     # checks if a bundle has Twig templates, and prepares them for extraction
     agit.intl.bundle.twig.collect:
+        private: true
         class: Agit\IntlBundle\EventListener\TranslationTwigListener
         arguments: [ "@agit.common.filecollector", "@twig" ]
         tags: [{ name: kernel.event_listener, event: agit.intl.bundle.files, method: onRegistration }]
+
+    # creates the global catalog from bundle catalogs
+    agit.intl.catalog_generator:
+        private: true
+        class: Agit\IntlBundle\EventListener\CatalogCacheEventListener
+        arguments: [ "@kernel", "@event_dispatcher", "%kernel.bundles%", "%agit.intl.locales%", "%agit.intl.catalog_dir%" ]
+        tags: [{ name: kernel.cache_warmer }]
+
 
 
     # settings (optional, will only be used if setting-bundle is installed)

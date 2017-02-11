@@ -7,48 +7,68 @@
  * @license    http://opensource.org/licenses/MIT
  */
 
-namespace Agit\IntlBundle\Command;
+namespace Agit\IntlBundle\EventListener;
 
 use Agit\IntlBundle\Event\TranslationsEvent;
 use Gettext\Merge;
 use Gettext\Translation;
 use Gettext\Translations;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
-class GlobalCatalogCommand extends ContainerAwareCommand
+class CatalogCacheEventListener implements CacheWarmerInterface
 {
-    private $catalogSubdir = "Resources/translations";
+    const BUNDLE_CATALOG_DIR = "Resources/translations";
+
+    /**
+     * @var KernelInterface
+     */
+    private $kernel;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    private $catalogDir;
+
+    private $bundles;
+
+    private $locales;
 
     private $extraTranslations = [];
 
-    protected function configure()
+    public function __construct(KernelInterface $kernel, EventDispatcherInterface $eventDispatcher, array $bundles, array $locales, $catalogDir)
     {
-        $this
-            ->setName("agit:translations:global")
-            ->setDescription("Update the global translations catalogs from bundle’s translations.");
+        $this->kernel = $kernel;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->bundles = $bundles;
+        $this->locales = $locales;
+        $this->catalogDir = $catalogDir;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    public function warmUp($cacheDir)
     {
-        $container = $this->getContainer();
+        $this->process();
+    }
+
+    public function isOptional()
+    {
+        return true;
+    }
+
+    protected function process()
+    {
         $filesystem = new Filesystem();
-        $locator = $container->get("agit.common.filecollector");
 
-        $bundles = $container->getParameter("kernel.bundles");
-        $catalogPath = $container->getParameter("kernel.root_dir") . "/$this->catalogSubdir";
-
-        $this->getContainer()->get("event_dispatcher")->dispatch(
+        $this->eventDispatcher->dispatch(
             "agit.intl.global.translations",
             new TranslationsEvent($this));
 
-        foreach ($container->getParameter("agit.intl.locales") as $locale) {
-            $catalog = new Translations();
-
-            $messagesPath = "$catalogPath/$locale/LC_MESSAGES";
-
+        foreach ($this->locales as $locale) {
+            $messagesPath = sprintf("%s/%s/LC_MESSAGES", $this->catalogDir, $locale);
             $catalogFile = "$messagesPath/agit.po";
             $oldCatalog = $filesystem->exists($catalogFile)
                     ? Translations::fromPoFile($catalogFile)
@@ -58,11 +78,12 @@ class GlobalCatalogCommand extends ContainerAwareCommand
                 $translation->deleteReferences();
             }
 
+            $catalog = new Translations();
             $catalog->mergeWith($oldCatalog, 0);
 
-            foreach ($bundles as $alias => $namespace) {
-                $bundlePath = $locator->resolve($alias);
-                $bundleCatalogFile = "$bundlePath/$this->catalogSubdir/bundle.$locale.po";
+            foreach ($this->bundles as $alias => $namespace) {
+                $bundlePath = $this->kernel->locateResource("@$alias");
+                $bundleCatalogFile = sprintf("%s/%s/bundle.%s.po", $bundlePath, self::BUNDLE_CATALOG_DIR, $locale);
 
                 $bundleCatalog = $filesystem->exists($bundleCatalogFile)
                     ? Translations::fromPoFile($bundleCatalogFile)
@@ -77,7 +98,6 @@ class GlobalCatalogCommand extends ContainerAwareCommand
                 }
             }
 
-            // NOTE: we delete all headers and only set language in order to avoid garbage commits
             $catalog->deleteHeaders();
             $catalog->setLanguage($locale);
             $catalog->setHeader("Content-Type", "text/plain; charset=UTF-8");
