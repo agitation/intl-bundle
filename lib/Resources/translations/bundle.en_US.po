@@ -152,7 +152,7 @@ msgstr "Fri"
 msgid "Sat"
 msgstr "Sat"
 
-#: @AgitIntlBundle/Tool/Date.php:70
+#: @AgitIntlBundle/Tool/Date.php:66
 msgctxt "first day of week; 0: Sunday, 1: Monday"
 msgid "0"
 msgstr ""

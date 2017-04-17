@@ -27,7 +27,7 @@ class BundleCatalogCommand extends ContainerAwareCommand
 {
     private $catalogSubdir = "Resources/translations";
 
-    private $frontendSubdir = "Resources/public/js/var";
+    private $assetsSubdir = "Resources/public";
 
     private $extraTranslations;
 
@@ -99,7 +99,7 @@ class BundleCatalogCommand extends ContainerAwareCommand
         $frontendFiles = array_filter(array_keys($files), function ($file) { return preg_match("|\.js$|", $file); });
         $backendFiles = array_filter(array_keys($files), function ($file) { return ! preg_match("|\.js$|", $file); });
 
-        $frontendCatalogs = "";
+        $frontendCatalogs = [];
 
         foreach ($locales as $locale) {
             if (! preg_match("|^[a-z]{2}_[A-Z]{2}|", $locale)) {
@@ -132,21 +132,50 @@ class BundleCatalogCommand extends ContainerAwareCommand
             $bundleCatalog->mergeWith($globalCatalog, 0);
 
             if ($bundleCatalog->count() && $locale !== $defaultLocale) {
-                $transMap = [];
+                if (! isset($frontendCatalogs[$locale])) {
+                    $frontendCatalogs[$locale] = [];
+                }
 
                 foreach ($bundleCatalog as $entry) {
+                    $areas = [];
+
+                    foreach ($entry->getReferences() as $ref) {
+                        $areas[] = preg_replace("|^.*{$this->assetsSubdir}/(.*js).+$|", '$1', $ref[0]);
+                    }
+
                     $msgid = ltrim($entry->getId(), "\004");
                     $msgstr = $entry->getTranslation();
 
-                    $transMap[$msgid] = $entry->hasPlural()
+                    $trans = $entry->hasPlural()
                         ? array_merge([$msgstr], $entry->getPluralTranslations())
                         : $msgstr;
-                }
 
-                $frontendCatalogs .= sprintf("ag.intl.register(\"%s\", %s);\n\n",
-                    $locale,
-                    json_encode($transMap, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
-                );
+                    foreach (array_unique($areas) as $area) {
+                        if (! isset($frontendCatalogs[$locale][$area])) {
+                            $frontendCatalogs[$locale][$area] = [];
+                        }
+
+                        $frontendCatalogs[$locale][$area][$msgid] = $trans;
+                    }
+                }
+            }
+
+            // we need to flip locale and area
+
+            $frontendTranslationFiles = [];
+
+            foreach ($frontendCatalogs as $loc => $areaCatalogs) {
+                foreach ($areaCatalogs as $area => $msgMap) {
+                    if (! isset($frontendTranslationFiles[$area])) {
+                        $frontendTranslationFiles[$area] = [];
+                    }
+
+                    if (! isset($frontendTranslationFiles[$area][$loc])) {
+                        $frontendTranslationFiles[$area][$loc] = [];
+                    }
+
+                    $frontendTranslationFiles[$area][$loc] += $msgMap;
+                }
             }
 
             // now the same with all messages
@@ -167,8 +196,17 @@ class BundleCatalogCommand extends ContainerAwareCommand
             }
         }
 
-        if ($frontendCatalogs) {
-            $filesystem->dumpFile("$bundlePath/$this->frontendSubdir/translations.js", $frontendCatalogs);
+        foreach ($frontendTranslationFiles as $area => $frontendTranslationFile) {
+            $file = "";
+
+            foreach ($frontendTranslationFile as $loc => $contents) {
+                $file .= sprintf("ag.intl.register(\"%s\", %s);\n\n",
+                    $loc,
+                    json_encode($contents, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+                );
+            }
+
+            $filesystem->dumpFile("$bundlePath/$this->assetsSubdir/$area/var/translations.js", $file);
         }
 
         $filesystem->remove($this->cacheBasePath);
