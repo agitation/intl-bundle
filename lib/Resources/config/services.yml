@@ -35,8 +35,8 @@ services:
     agit.intl.catalog_generator:
         private: true
         class: Agit\IntlBundle\EventListener\CatalogCacheEventListener
-        arguments: [ "@kernel", "@event_dispatcher", "%kernel.bundles%", "%agit.intl.locales%", "%agit.intl.catalog_dir%" ]
-        tags: [{ name: kernel.cache_warmer }]
+        arguments: [ "@kernel", "@event_dispatcher", "%kernel.bundles%", "%agit.intl.locales%", "%agit.intl.catalog_dir%", "agit" ]
+        tags: [{ name: kernel.cache_warmer, priority : 1000 }]
 
 
 

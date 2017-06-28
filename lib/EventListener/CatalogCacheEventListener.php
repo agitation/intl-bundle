@@ -34,24 +34,29 @@ class CatalogCacheEventListener implements CacheWarmerInterface
 
     private $catalogDir;
 
+    private $textdomain;
+
     private $bundles;
 
     private $locales;
 
     private $extraTranslations = [];
 
-    public function __construct(KernelInterface $kernel, EventDispatcherInterface $eventDispatcher, array $bundles, array $locales, $catalogDir)
+    public function __construct(KernelInterface $kernel, EventDispatcherInterface $eventDispatcher, array $bundles, array $locales, $catalogDir, $textdomain)
     {
         $this->kernel = $kernel;
         $this->eventDispatcher = $eventDispatcher;
         $this->bundles = $bundles;
         $this->locales = $locales;
         $this->catalogDir = $catalogDir;
+        $this->textdomain = $textdomain;
     }
 
     public function warmUp($cacheDir)
     {
         $this->process();
+        bindtextdomain($this->textdomain, $this->catalogDir);
+        textdomain($this->textdomain);
     }
 
     public function isOptional()
