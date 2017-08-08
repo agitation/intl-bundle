@@ -72,7 +72,9 @@ class Date
         $result = "";
 
         for ($i = 0; $i < strlen($format); $i++) {
-            $result .= self::idate($format[$i], $timestamp);
+            $result .= ($format[$i] === '\\')
+                ? $format[++$i]
+                : self::idate($format[$i], $timestamp);
         }
 
         return $result;
