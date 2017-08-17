@@ -10,7 +10,7 @@
 namespace Agit\IntlBundle\EventListener;
 
 use Agit\CldrBundle\Adapter\TimeAdapter;
-use Agit\IntlBundle\Event\BundleTranslationsEvent;
+use Agit\IntlBundle\Event\TranslationsEvent;
 use Agit\IntlBundle\Service\LocaleService;
 use Gettext\Translation;
 
@@ -26,7 +26,7 @@ class TranslationCldrListener
         $this->timeAdapter = $timeAdapter;
     }
 
-    public function onRegistration(BundleTranslationsEvent $event)
+    public function onRegistration(TranslationsEvent $event)
     {
         $defaultLocale = $this->localeService->getDefaultLocale();
         $availableLocales = $this->localeService->getAvailableLocales();

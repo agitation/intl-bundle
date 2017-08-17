@@ -22,7 +22,7 @@ services:
         private: true
         class: Agit\IntlBundle\EventListener\TranslationCldrListener
         arguments: [ "@agit.intl.locale", "@agit.cldr.adapter.time" ]
-        tags: [{ name: kernel.event_listener, event: agit.intl.bundle.catalog, method: onRegistration }]
+        tags: [{ name: kernel.event_listener, event: agit.intl.global.translations, method: onRegistration }]
 
     # checks if a bundle has Twig templates, and prepares them for extraction
     agit.intl.bundle.twig.collect:
