@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 /*
  * @package    agitation/intl-bundle
  * @link       http://github.com/agitation/intl-bundle
@@ -15,7 +15,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class TranslationTwigListener
 {
-    protected $bundleTemplatesPath = "Resources/views";
+    protected $bundleTemplatesPath = 'Resources/views';
 
     private $fileCollector;
 
@@ -45,7 +45,8 @@ class TranslationTwigListener
         $this->twig->enableAutoReload();
         $this->twig->setCache($cachePath);
 
-        foreach ($this->fileCollector->collect($tplDir, "twig") as $file) {
+        foreach ($this->fileCollector->collect($tplDir, 'twig') as $file)
+        {
             $this->twig->loadTemplate($file); // force rendering
             $cacheFilePath = $this->twig->getCacheFilename($file);
             $fileId = str_replace($tplDir, "@$bundleAlias/", $file);
@@ -54,6 +55,6 @@ class TranslationTwigListener
 
         // resetting original values
         $this->twig->setCache($actualCachePath);
-        call_user_func([$this->twig, $actualAutoReload ? "enableAutoReload" :  "disableAutoReload"]);
+        call_user_func([$this->twig, $actualAutoReload ? 'enableAutoReload' : 'disableAutoReload']);
     }
 }

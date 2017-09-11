@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 /*
  * @package    agitation/intl-bundle
  * @link       http://github.com/agitation/intl-bundle
@@ -15,7 +15,7 @@ use Locale;
 
 class LocaleService
 {
-    private $defaultLocale = "en_US";
+    private $defaultLocale = 'en_US';
 
     private $currentLocale;
 
@@ -48,7 +48,8 @@ class LocaleService
 
     public function setLocale($locale)
     {
-        if (! in_array($locale, $this->availableLocales)) {
+        if (! in_array($locale, $this->availableLocales))
+        {
             throw new InternalErrorException("The locale `$locale` is not available.");
         }
 
@@ -64,17 +65,21 @@ class LocaleService
 
     public function getUserLocale()
     {
-        $browserLocale = isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) ? Locale::acceptFromHttp($_SERVER["HTTP_ACCEPT_LANGUAGE"]) : "";
+        $browserLocale = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']) : '';
 
         $userLocale = (in_array($browserLocale, $this->availableLocales))
             ? $browserLocale
-            : "";
+            : '';
 
         // try locales with same language but different country
-        if (! $userLocale) {
-            foreach ($this->availableLocales as $locale) {
-                if (strtolower(substr($locale, 0, 2)) === strtolower(substr($browserLocale, 0, 2))) {
+        if (! $userLocale)
+        {
+            foreach ($this->availableLocales as $locale)
+            {
+                if (strtolower(substr($locale, 0, 2)) === strtolower(substr($browserLocale, 0, 2)))
+                {
                     $userLocale = $locale;
+
                     break;
                 }
             }

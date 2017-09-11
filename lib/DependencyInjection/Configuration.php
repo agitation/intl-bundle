@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 /*
  * @package    agitation/intl-bundle
  * @link       http://github.com/agitation/intl-bundle
@@ -25,7 +25,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root("agit_intl");
+        $rootNode = $treeBuilder->root('agit_intl');
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for

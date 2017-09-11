@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 /*
  * @package    agitation/intl-bundle
  * @link       http://github.com/agitation/intl-bundle
@@ -28,11 +28,11 @@ class TranslationExtension extends Twig_Extension
     public function getFunctions()
     {
         return [
-            new Twig_SimpleFunction("t", [$this, "t"],  ["is_safe" => ["all"]]),
-            new Twig_SimpleFunction("n", [$this, "n"],  ["is_safe" => ["all"]]),
-            new Twig_SimpleFunction("x", [$this, "x"],  ["is_safe" => ["all"]]),
-            new Twig_SimpleFunction("ts", [$this, "ts"], ["is_safe" => ["all"]]),
-            new Twig_SimpleFunction("getActiveLocales", [$this, "getActiveLocales"])
+            new Twig_SimpleFunction('t', [$this, 't'], ['is_safe' => ['all']]),
+            new Twig_SimpleFunction('n', [$this, 'n'], ['is_safe' => ['all']]),
+            new Twig_SimpleFunction('x', [$this, 'x'], ['is_safe' => ['all']]),
+            new Twig_SimpleFunction('ts', [$this, 'ts'], ['is_safe' => ['all']]),
+            new Twig_SimpleFunction('getActiveLocales', [$this, 'getActiveLocales'])
 
         ];
     }
@@ -44,7 +44,7 @@ class TranslationExtension extends Twig_Extension
      */
     public function getName()
     {
-        return "translation";
+        return 'translation';
     }
 
     public function t($string)

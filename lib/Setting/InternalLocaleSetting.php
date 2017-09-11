@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 /*
  * @package    agitation/intl-bundle
  * @link       http://github.com/agitation/intl-bundle
@@ -15,23 +15,23 @@ class InternalLocaleSetting extends AbstractLocaleSetting
 {
     public function getId()
     {
-        return "agit.internal_locale";
+        return 'agit.internal_locale';
     }
 
     public function getName()
     {
-        return Translate::t("Internal language");
+        return Translate::t('Internal language');
     }
 
     public function getDefaultValue()
     {
-        return "en_US";
+        return 'en_US';
     }
 
     public function validate($value)
     {
         $this->validationService->validate(
-            "selection",
+            'selection',
             $value,
             $this->localeService->getAvailableLocales()
         );

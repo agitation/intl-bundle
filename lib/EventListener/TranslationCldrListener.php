@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 /*
  * @package    agitation/intl-bundle
  * @link       http://github.com/agitation/intl-bundle
@@ -32,19 +32,22 @@ class TranslationCldrListener
         $availableLocales = $this->localeService->getAvailableLocales();
 
         $lists = [
-            "month"   => $this->timeAdapter->getMonths($defaultLocale, $availableLocales),
-            "weekday" => $this->timeAdapter->getWeekdays($defaultLocale, $availableLocales)
+            'month' => $this->timeAdapter->getMonths($defaultLocale, $availableLocales),
+            'weekday' => $this->timeAdapter->getWeekdays($defaultLocale, $availableLocales)
         ];
 
-        foreach ($availableLocales as $locale) {
-            foreach ($lists as $type => $list) {
-                foreach ($list as $id => $elem) {
-                    $longTrans = new Translation("", $elem->getName($defaultLocale));
+        foreach ($availableLocales as $locale)
+        {
+            foreach ($lists as $type => $list)
+            {
+                foreach ($list as $id => $elem)
+                {
+                    $longTrans = new Translation('', $elem->getName($defaultLocale));
                     $longTrans->setTranslation($elem->getName($locale));
                     $longTrans->addReference("localedata:$type");
                     $event->addTranslation($locale, $longTrans);
 
-                    $abbrTrans = new Translation("", $elem->getAbbr($defaultLocale));
+                    $abbrTrans = new Translation('', $elem->getAbbr($defaultLocale));
                     $abbrTrans->setTranslation($elem->getAbbr($locale));
                     $abbrTrans->addReference("localedata:$type:$id");
                     $event->addTranslation($locale, $abbrTrans);

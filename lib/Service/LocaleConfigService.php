@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 /*
  * @package    agitation/intl-bundle
  * @link       http://github.com/agitation/intl-bundle
@@ -28,20 +28,20 @@ class LocaleConfigService
     public function getInternalLocale()
     {
         return ($this->settingService)
-            ? $this->settingService->getValueOf("agit.internal_locale")
+            ? $this->settingService->getValueOf('agit.internal_locale')
             : $this->localeService->getDefaultLocale();
     }
 
     public function getActiveLocales()
     {
         return ($this->settingService)
-            ? $this->settingService->getValueOf("agit.user_locales")
+            ? $this->settingService->getValueOf('agit.user_locales')
             : $this->localeService->getAvailableLocales();
     }
 
     public function settingsLoaded(SettingsLoadedEvent $event)
     {
-        $internalLocale = $event->getSettingService()->getValueOf("agit.internal_locale");
+        $internalLocale = $event->getSettingService()->getValueOf('agit.internal_locale');
         Translate::_setAppLocale($internalLocale);
     }
 }

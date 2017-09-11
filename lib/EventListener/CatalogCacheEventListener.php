@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 /*
  * @package    agitation/intl-bundle
  * @link       http://github.com/agitation/intl-bundle
@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class CatalogCacheEventListener implements CacheWarmerInterface
 {
-    const BUNDLE_CATALOG_DIR = "Resources/translations";
+    const BUNDLE_CATALOG_DIR = 'Resources/translations';
 
     /**
      * @var KernelInterface
@@ -64,31 +64,45 @@ class CatalogCacheEventListener implements CacheWarmerInterface
         return true;
     }
 
+    public function addTranslation($locale, Translation $translation)
+    {
+        if (! isset($this->extraTranslations[$locale]))
+        {
+            $this->extraTranslations[$locale] = [];
+        }
+
+        $this->extraTranslations[$locale][] = $translation;
+    }
+
     protected function process()
     {
         $filesystem = new Filesystem();
 
         $this->eventDispatcher->dispatch(
-            "agit.intl.global.translations",
-            new TranslationsEvent($this));
+            'agit.intl.global.translations',
+            new TranslationsEvent($this)
+        );
 
-        foreach ($this->locales as $locale) {
-            $messagesPath = sprintf("%s/%s/LC_MESSAGES", $this->catalogDir, $locale);
+        foreach ($this->locales as $locale)
+        {
+            $messagesPath = sprintf('%s/%s/LC_MESSAGES', $this->catalogDir, $locale);
             $catalogFile = "$messagesPath/agit.po";
             $oldCatalog = $filesystem->exists($catalogFile)
                     ? Translations::fromPoFile($catalogFile)
                     : new Translations();
 
-            foreach ($oldCatalog as $translation) {
+            foreach ($oldCatalog as $translation)
+            {
                 $translation->deleteReferences();
             }
 
             $catalog = new Translations();
             $catalog->mergeWith($oldCatalog, 0);
 
-            foreach ($this->bundles as $alias => $namespace) {
+            foreach ($this->bundles as $alias => $namespace)
+            {
                 $bundlePath = $this->kernel->locateResource("@$alias");
-                $bundleCatalogFile = sprintf("%s/%s/bundle.%s.po", $bundlePath, self::BUNDLE_CATALOG_DIR, $locale);
+                $bundleCatalogFile = sprintf('%s/%s/bundle.%s.po', $bundlePath, self::BUNDLE_CATALOG_DIR, $locale);
 
                 $bundleCatalog = $filesystem->exists($bundleCatalogFile)
                     ? Translations::fromPoFile($bundleCatalogFile)
@@ -97,27 +111,20 @@ class CatalogCacheEventListener implements CacheWarmerInterface
                 $catalog->mergeWith($bundleCatalog, Merge::ADD);
             }
 
-            if (isset($this->extraTranslations[$locale])) {
-                foreach ($this->extraTranslations[$locale] as $translation) {
+            if (isset($this->extraTranslations[$locale]))
+            {
+                foreach ($this->extraTranslations[$locale] as $translation)
+                {
                     $catalog[] = $translation;
                 }
             }
 
             $catalog->deleteHeaders();
             $catalog->setLanguage($locale);
-            $catalog->setHeader("Content-Type", "text/plain; charset=UTF-8");
+            $catalog->setHeader('Content-Type', 'text/plain; charset=UTF-8');
 
             $filesystem->dumpFile($catalogFile, $catalog->toPoString());
             $filesystem->dumpFile("$messagesPath/agit.mo", $catalog->toMoString());
         }
-    }
-
-    public function addTranslation($locale, Translation $translation)
-    {
-        if (! isset($this->extraTranslations[$locale])) {
-            $this->extraTranslations[$locale] = [];
-        }
-
-        $this->extraTranslations[$locale][] = $translation;
     }
 }

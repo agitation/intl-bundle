@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 /*
  * @package    agitation/intl-bundle
  * @link       http://github.com/agitation/intl-bundle
@@ -25,29 +25,39 @@ use Symfony\Component\Finder\Finder;
 
 class BundleCatalogCommand extends ContainerAwareCommand
 {
-    private $catalogSubdir = "Resources/translations";
+    private $catalogSubdir = 'Resources/translations';
 
-    private $assetsSubdir = "Resources/public";
+    private $assetsSubdir = 'Resources/public';
 
     private $extraTranslations;
 
     private $cacheBasePath;
 
-    private $extractorOptions = ["functions" => [
-        "t" => "gettext", "ts" => "gettext", "tl" => "gettext", "noop" => "gettext",
-        "x" => "pgettext", "xl" => "pgettext", "noopX" => "pgettext",
-        "n" => "ngettext", "nl" => "ngettext", "noopN" => "ngettext"
+    private $extractorOptions = ['functions' => [
+        't' => 'gettext', 'ts' => 'gettext', 'tl' => 'gettext', 'noop' => 'gettext',
+        'x' => 'pgettext', 'xl' => 'pgettext', 'noopX' => 'pgettext',
+        'n' => 'ngettext', 'nl' => 'ngettext', 'noopN' => 'ngettext'
     ]];
 
     private $extraSourceFiles = [];
 
+    public function registerSourceFile($alias, $path)
+    {
+        $this->extraSourceFiles[$path] = $alias;
+    }
+
+    public function addTranslation(Translation $translation)
+    {
+        $this->extraTranslations[] = $translation;
+    }
+
     protected function configure()
     {
         $this
-            ->setName("agit:translations:bundle")
-            ->setDescription("Extract translatable strings in a bundle’s into .po and .json files, then add/merge them to the global catalogs.")
-            ->addArgument("bundle", InputArgument::REQUIRED, "bundle alias, e.g. AcmeFoobarBundle.")
-            ->addArgument("locales", InputArgument::OPTIONAL, "Comma-separated list of locales supported by the bundle. Optional; if empty, locales from parameters.yml will be used.");
+            ->setName('agit:translations:bundle')
+            ->setDescription('Extract translatable strings in a bundle’s into .po and .json files, then add/merge them to the global catalogs.')
+            ->addArgument('bundle', InputArgument::REQUIRED, 'bundle alias, e.g. AcmeFoobarBundle.')
+            ->addArgument('locales', InputArgument::OPTIONAL, 'Comma-separated list of locales supported by the bundle. Optional; if empty, locales from parameters.yml will be used.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -55,54 +65,61 @@ class BundleCatalogCommand extends ContainerAwareCommand
         $container = $this->getContainer();
         $filesystem = new Filesystem();
 
-        $bundleAlias = $input->getArgument("bundle");
-        $bundlePath = $container->get("agit.common.filecollector")->resolve($bundleAlias);
+        $bundleAlias = $input->getArgument('bundle');
+        $bundlePath = $container->get('agit.common.filecollector')->resolve($bundleAlias);
 
-        $defaultLocale = $container->get("agit.intl.locale")->getDefaultLocale();
+        $defaultLocale = $container->get('agit.intl.locale')->getDefaultLocale();
 
-        $locales = $input->getArgument("locales")
-            ? array_map("trim", explode(",", $input->getArgument("locales")))
-            : $container->getParameter("agit.intl.locales");
+        $locales = $input->getArgument('locales')
+            ? array_map('trim', explode(',', $input->getArgument('locales')))
+            : $container->getParameter('agit.intl.locales');
 
-        $globalCatalogPath = $container->getParameter("agit.intl.catalog_dir");
-        $this->cacheBasePath = sprintf("%s/agit.intl.temp/%s", sys_get_temp_dir(), $bundleAlias);
+        $globalCatalogPath = $container->getParameter('agit.intl.catalog_dir');
+        $this->cacheBasePath = sprintf('%s/agit.intl.temp/%s', sys_get_temp_dir(), $bundleAlias);
         $filesystem->mkdir($this->cacheBasePath);
 
         $finder = (new Finder())->in("$bundlePath")
             ->name("*\.php")
             ->name("*\.js")
-            ->notPath("/test.*/i")
-            ->notPath("public/js/ext");
+            ->notPath('/test.*/i')
+            ->notPath('public/js/ext');
 
         $files = [];
 
-        foreach ($finder as $file) {
+        foreach ($finder as $file)
+        {
             $filePath = $file->getRealpath();
             $alias = str_replace($bundlePath, "@$bundleAlias/", $filePath);
             $files[$filePath] = $alias;
         }
 
-        $this->getContainer()->get("event_dispatcher")->dispatch(
-            "agit.intl.bundle.files",
+        $this->getContainer()->get('event_dispatcher')->dispatch(
+            'agit.intl.bundle.files',
             new BundleTranslationFilesEvent($this, $bundleAlias, $this->cacheBasePath)
         );
 
         $this->extraTranslations = new Translations();
 
-        $this->getContainer()->get("event_dispatcher")->dispatch(
-            "agit.intl.bundle.translations",
+        $this->getContainer()->get('event_dispatcher')->dispatch(
+            'agit.intl.bundle.translations',
             new BundleTranslationsEvent($this, $bundleAlias)
         );
 
         $files += $this->extraSourceFiles;
 
-        $frontendFiles = array_filter(array_keys($files), function ($file) { return preg_match("|\.js$|", $file); });
-        $backendFiles = array_filter(array_keys($files), function ($file) { return ! preg_match("|\.js$|", $file); });
+        $frontendFiles = array_filter(array_keys($files), function ($file) {
+            return preg_match("|\.js$|", $file);
+        });
+        $backendFiles = array_filter(array_keys($files), function ($file) {
+            return ! preg_match("|\.js$|", $file);
+        });
 
         $frontendCatalogs = [];
 
-        foreach ($locales as $locale) {
-            if (! preg_match("|^[a-z]{2}_[A-Z]{2}|", $locale)) {
+        foreach ($locales as $locale)
+        {
+            if (! preg_match('|^[a-z]{2}_[A-Z]{2}|', $locale))
+            {
                 throw new Exception("Invalid locale: $locale");
             }
 
@@ -124,22 +141,27 @@ class BundleCatalogCommand extends ContainerAwareCommand
 
             // first: only JS messages
 
-            foreach ($frontendFiles as $file) {
+            foreach ($frontendFiles as $file)
+            {
                 $bundleCatalog->addFromJsCodeFile($file, $this->extractorOptions);
             }
 
             $bundleCatalog->mergeWith($oldBundleCatalog, 0);
             $bundleCatalog->mergeWith($globalCatalog, 0);
 
-            if ($bundleCatalog->count() && $locale !== $defaultLocale) {
-                if (! isset($frontendCatalogs[$locale])) {
+            if ($bundleCatalog->count() && $locale !== $defaultLocale)
+            {
+                if (! isset($frontendCatalogs[$locale]))
+                {
                     $frontendCatalogs[$locale] = [];
                 }
 
-                foreach ($bundleCatalog as $entry) {
+                foreach ($bundleCatalog as $entry)
+                {
                     $areas = [];
 
-                    foreach ($entry->getReferences() as $ref) {
+                    foreach ($entry->getReferences() as $ref)
+                    {
                         $areas[] = preg_replace("|^.*{$this->assetsSubdir}/(.*js).+$|", '$1', $ref[0]);
                     }
 
@@ -150,8 +172,10 @@ class BundleCatalogCommand extends ContainerAwareCommand
                         ? array_merge([$msgstr], $entry->getPluralTranslations())
                         : $msgstr;
 
-                    foreach (array_unique($areas) as $area) {
-                        if (! isset($frontendCatalogs[$locale][$area])) {
+                    foreach (array_unique($areas) as $area)
+                    {
+                        if (! isset($frontendCatalogs[$locale][$area]))
+                        {
                             $frontendCatalogs[$locale][$area] = [];
                         }
 
@@ -164,13 +188,17 @@ class BundleCatalogCommand extends ContainerAwareCommand
 
             $frontendTranslationFiles = [];
 
-            foreach ($frontendCatalogs as $loc => $areaCatalogs) {
-                foreach ($areaCatalogs as $area => $msgMap) {
-                    if (! isset($frontendTranslationFiles[$area])) {
+            foreach ($frontendCatalogs as $loc => $areaCatalogs)
+            {
+                foreach ($areaCatalogs as $area => $msgMap)
+                {
+                    if (! isset($frontendTranslationFiles[$area]))
+                    {
                         $frontendTranslationFiles[$area] = [];
                     }
 
-                    if (! isset($frontendTranslationFiles[$area][$loc])) {
+                    if (! isset($frontendTranslationFiles[$area][$loc]))
+                    {
                         $frontendTranslationFiles[$area][$loc] = [];
                     }
 
@@ -180,7 +208,8 @@ class BundleCatalogCommand extends ContainerAwareCommand
 
             // now the same with all messages
 
-            foreach ($backendFiles as $file) {
+            foreach ($backendFiles as $file)
+            {
                 $bundleCatalog->addFromPhpCodeFile($file, $this->extractorOptions);
             }
 
@@ -191,16 +220,20 @@ class BundleCatalogCommand extends ContainerAwareCommand
             $catalog = $bundleCatalog->toPoString();
             $catalog = str_replace(array_keys($files), array_values($files), $catalog);
 
-            if ($bundleCatalog->count()) {
+            if ($bundleCatalog->count())
+            {
                 $filesystem->dumpFile("$bundlePath/$this->catalogSubdir/bundle.$locale.po", $catalog);
             }
         }
 
-        foreach ($frontendTranslationFiles as $area => $frontendTranslationFile) {
-            $file = "";
+        foreach ($frontendTranslationFiles as $area => $frontendTranslationFile)
+        {
+            $file = '';
 
-            foreach ($frontendTranslationFile as $loc => $contents) {
-                $file .= sprintf("ag.intl.register(\"%s\", %s);\n\n",
+            foreach ($frontendTranslationFile as $loc => $contents)
+            {
+                $file .= sprintf(
+                    "ag.intl.register(\"%s\", %s);\n\n",
                     $loc,
                     json_encode($contents, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
                 );
@@ -212,19 +245,10 @@ class BundleCatalogCommand extends ContainerAwareCommand
         $filesystem->remove($this->cacheBasePath);
     }
 
-    public function registerSourceFile($alias, $path)
-    {
-        $this->extraSourceFiles[$path] = $alias;
-    }
-
-    public function addTranslation(Translation $translation)
-    {
-        $this->extraTranslations[] = $translation;
-    }
-
     private function deleteReferences(Translations $catalog)
     {
-        foreach ($catalog as $translation) {
+        foreach ($catalog as $translation)
+        {
             $translation->deleteReferences();
         }
 
