@@ -12,6 +12,7 @@ namespace Agit\IntlBundle\EventListener;
 use Agit\BaseBundle\Service\FileCollector;
 use Agit\IntlBundle\Event\BundleTranslationFilesEvent;
 use Symfony\Component\Filesystem\Filesystem;
+use Twig_Environment;
 
 class TranslationTwigListener
 {
@@ -19,9 +20,12 @@ class TranslationTwigListener
 
     private $fileCollector;
 
+    /**
+     * @var Twig_Environment
+     */
     private $twig;
 
-    public function __construct(FileCollector $fileCollector, \Twig_Environment $twig)
+    public function __construct(FileCollector $fileCollector, Twig_Environment $twig)
     {
         $this->fileCollector = $fileCollector;
         $this->twig = $twig;
@@ -40,6 +44,7 @@ class TranslationTwigListener
         $filesystem = new Filesystem();
         $cachePath = $event->getCacheBasePath() . md5(__CLASS__);
         $filesystem->mkdir($cachePath);
+        $twigCache = $this->twig->getCache(false);
 
         // setting temporary values
         $this->twig->enableAutoReload();
@@ -48,7 +53,8 @@ class TranslationTwigListener
         foreach ($this->fileCollector->collect($tplDir, 'twig') as $file)
         {
             $this->twig->loadTemplate($file); // force rendering
-            $cacheFilePath = $this->twig->getCacheFilename($file);
+
+            $cacheFilePath = $twigCache->generateKey($file, $this->twig->getTemplateClass($file));
             $fileId = str_replace($tplDir, "@$bundleAlias/", $file);
             $event->registerSourceFile($fileId, $cacheFilePath);
         }
