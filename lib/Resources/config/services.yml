@@ -1,10 +1,10 @@
 parameters:
-    agit.intl.catalog_dir: "%kernel.cache_dir%/agit/intl"
+    agit_intl_catalog_dir: "%kernel.cache_dir%/agit/intl"
 
 services:
     agit.intl.locale:
         class: Agit\IntlBundle\Service\LocaleService
-        arguments: [ "%agit.intl.locales%", "%agit.intl.catalog_dir%", "agit" ]
+        arguments: [ "%agit_intl_locales%", "%agit_intl_catalog_dir%", "agit" ]
 
     agit.intl.config:
         class: Agit\IntlBundle\Service\LocaleConfigService
@@ -35,7 +35,7 @@ services:
     agit.intl.catalog_generator:
         private: true
         class: Agit\IntlBundle\EventListener\CatalogCacheEventListener
-        arguments: [ "@kernel", "@event_dispatcher", "%kernel.bundles%", "%agit.intl.locales%", "%agit.intl.catalog_dir%", "agit" ]
+        arguments: [ "@kernel", "@event_dispatcher", "%kernel.bundles%", "%agit_intl_locales%", "%agit_intl_catalog_dir%", "agit" ]
         tags: [{ name: kernel.cache_warmer, priority : 1000 }]
 
 
