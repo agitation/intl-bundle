@@ -74,7 +74,7 @@ class BundleCatalogCommand extends ContainerAwareCommand
             ? array_map('trim', explode(',', $input->getArgument('locales')))
             : $container->getParameter('agit_intl_locales');
 
-        $globalCatalogPath = $container->getParameter('agit.intl.catalog_dir');
+        $globalCatalogPath = $container->getParameter('agit_intl_catalog_dir');
         $this->cacheBasePath = sprintf('%s/agit.intl.temp/%s', sys_get_temp_dir(), $bundleAlias);
         $filesystem->mkdir($this->cacheBasePath);
 
