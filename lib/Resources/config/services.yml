@@ -6,6 +6,8 @@ services:
         class: Agit\IntlBundle\Service\LocaleService
         arguments: [ "%agit_intl_locales%", "%agit_intl_catalog_dir%", "agit" ]
 
+    Agit\IntlBundle\Service\LocaleService: "@agit.intl.locale" # alias
+
     agit.intl.config:
         class: Agit\IntlBundle\Service\LocaleConfigService
         arguments: [ "@agit.intl.locale", "@?agit.setting" ]
