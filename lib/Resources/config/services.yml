@@ -11,7 +11,7 @@ services:
     agit.intl.config:
         class: Agit\IntlBundle\Service\LocaleConfigService
         arguments: [ "@agit.intl.locale", "@?agit.setting" ]
-        tags: [{ name: kernel.event_listener, event: agit.settings.loaded, method: settingsLoaded }]
+        tags: [{ name: kernel.event_listener, event: agit.settings.loaded, method: onSettingsLoaded }]
 
     # (Optional) Twig extension for template text block translations
     agit.intl.twig.translation:

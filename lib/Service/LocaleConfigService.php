@@ -40,9 +40,13 @@ class LocaleConfigService
             : $this->localeService->getAvailableLocales();
     }
 
-    public function settingsLoaded(SettingsLoadedEvent $event)
+    public function onSettingsLoaded(SettingsLoadedEvent $event)
     {
-        $internalLocale = $event->getSettingService()->getValueOf('agit.internal_locale');
-        Translate::_setAppLocale($internalLocale);
+        $loadedSettings = $event->getSettings();
+
+        if (isset($loadedSettings['agit.internal_locale']))
+        {
+            Translate::_setAppLocale($loadedSettings['agit.internal_locale']->getValue());
+        }
     }
 }
