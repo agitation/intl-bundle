@@ -3,168 +3,168 @@ msgstr ""
 "Language: en_US\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: @AgitIntlBundle/Tool/Date.php:18
+#: @AgitIntlBundle/Tool/Date.php:19
 msgid "January"
 msgstr "January"
 
-#: @AgitIntlBundle/Tool/Date.php:18
+#: @AgitIntlBundle/Tool/Date.php:19
 msgid "February"
 msgstr "February"
 
-#: @AgitIntlBundle/Tool/Date.php:18
+#: @AgitIntlBundle/Tool/Date.php:19
 msgid "March"
 msgstr "March"
 
-#: @AgitIntlBundle/Tool/Date.php:19
+#: @AgitIntlBundle/Tool/Date.php:20
 msgid "April"
 msgstr "April"
 
-#: @AgitIntlBundle/Tool/Date.php:19
-#: @AgitIntlBundle/Tool/Date.php:27
+#: @AgitIntlBundle/Tool/Date.php:20
+#: @AgitIntlBundle/Tool/Date.php:28
 msgid "May"
 msgstr "May"
 
-#: @AgitIntlBundle/Tool/Date.php:19
+#: @AgitIntlBundle/Tool/Date.php:20
 msgid "June"
 msgstr "June"
 
-#: @AgitIntlBundle/Tool/Date.php:20
+#: @AgitIntlBundle/Tool/Date.php:21
 msgid "July"
 msgstr "July"
 
-#: @AgitIntlBundle/Tool/Date.php:20
+#: @AgitIntlBundle/Tool/Date.php:21
 msgid "August"
 msgstr "August"
 
-#: @AgitIntlBundle/Tool/Date.php:20
+#: @AgitIntlBundle/Tool/Date.php:21
 msgid "September"
 msgstr "September"
 
-#: @AgitIntlBundle/Tool/Date.php:21
+#: @AgitIntlBundle/Tool/Date.php:22
 msgid "October"
 msgstr "October"
 
-#: @AgitIntlBundle/Tool/Date.php:21
+#: @AgitIntlBundle/Tool/Date.php:22
 msgid "November"
 msgstr "November"
 
-#: @AgitIntlBundle/Tool/Date.php:21
+#: @AgitIntlBundle/Tool/Date.php:22
 msgid "December"
 msgstr "December"
 
-#: @AgitIntlBundle/Tool/Date.php:26
+#: @AgitIntlBundle/Tool/Date.php:27
 msgid "Jan"
 msgstr "Jan"
 
-#: @AgitIntlBundle/Tool/Date.php:26
+#: @AgitIntlBundle/Tool/Date.php:27
 msgid "Feb"
 msgstr "Feb"
 
-#: @AgitIntlBundle/Tool/Date.php:26
+#: @AgitIntlBundle/Tool/Date.php:27
 msgid "Mar"
 msgstr "Mar"
 
-#: @AgitIntlBundle/Tool/Date.php:26
+#: @AgitIntlBundle/Tool/Date.php:27
 msgid "Apr"
 msgstr "Apr"
 
-#: @AgitIntlBundle/Tool/Date.php:27
+#: @AgitIntlBundle/Tool/Date.php:28
 msgid "Jun"
 msgstr "Jun"
 
-#: @AgitIntlBundle/Tool/Date.php:27
+#: @AgitIntlBundle/Tool/Date.php:28
 msgid "Jul"
 msgstr "Jul"
 
-#: @AgitIntlBundle/Tool/Date.php:27
+#: @AgitIntlBundle/Tool/Date.php:28
 msgid "Aug"
 msgstr "Aug"
 
-#: @AgitIntlBundle/Tool/Date.php:28
+#: @AgitIntlBundle/Tool/Date.php:29
 msgid "Sep"
 msgstr "Sep"
 
-#: @AgitIntlBundle/Tool/Date.php:28
+#: @AgitIntlBundle/Tool/Date.php:29
 msgid "Oct"
 msgstr "Oct"
 
-#: @AgitIntlBundle/Tool/Date.php:28
+#: @AgitIntlBundle/Tool/Date.php:29
 msgid "Nov"
 msgstr "Nov"
 
-#: @AgitIntlBundle/Tool/Date.php:28
+#: @AgitIntlBundle/Tool/Date.php:29
 msgid "Dec"
 msgstr "Dec"
 
-#: @AgitIntlBundle/Tool/Date.php:33
+#: @AgitIntlBundle/Tool/Date.php:34
 msgid "Sunday"
 msgstr "Sunday"
 
-#: @AgitIntlBundle/Tool/Date.php:33
+#: @AgitIntlBundle/Tool/Date.php:34
 msgid "Monday"
 msgstr "Monday"
 
-#: @AgitIntlBundle/Tool/Date.php:33
+#: @AgitIntlBundle/Tool/Date.php:34
 msgid "Tuesday"
 msgstr "Tuesday"
 
-#: @AgitIntlBundle/Tool/Date.php:34
+#: @AgitIntlBundle/Tool/Date.php:35
 msgid "Wednesday"
 msgstr "Wednesday"
 
-#: @AgitIntlBundle/Tool/Date.php:34
+#: @AgitIntlBundle/Tool/Date.php:35
 msgid "Thursday"
 msgstr "Thursday"
 
-#: @AgitIntlBundle/Tool/Date.php:35
+#: @AgitIntlBundle/Tool/Date.php:36
 msgid "Friday"
 msgstr "Friday"
 
-#: @AgitIntlBundle/Tool/Date.php:35
+#: @AgitIntlBundle/Tool/Date.php:36
 msgid "Saturday"
 msgstr "Saturday"
 
-#: @AgitIntlBundle/Tool/Date.php:40
+#: @AgitIntlBundle/Tool/Date.php:41
 msgid "Sun"
 msgstr "Sun"
 
-#: @AgitIntlBundle/Tool/Date.php:40
+#: @AgitIntlBundle/Tool/Date.php:41
 msgid "Mon"
 msgstr "Mon"
 
-#: @AgitIntlBundle/Tool/Date.php:40
+#: @AgitIntlBundle/Tool/Date.php:41
 msgid "Tue"
 msgstr "Tue"
 
-#: @AgitIntlBundle/Tool/Date.php:40
+#: @AgitIntlBundle/Tool/Date.php:41
 msgid "Wed"
 msgstr "Wed"
 
-#: @AgitIntlBundle/Tool/Date.php:41
+#: @AgitIntlBundle/Tool/Date.php:42
 msgid "Thu"
 msgstr "Thu"
 
-#: @AgitIntlBundle/Tool/Date.php:41
+#: @AgitIntlBundle/Tool/Date.php:42
 msgid "Fri"
 msgstr "Fri"
 
-#: @AgitIntlBundle/Tool/Date.php:41
+#: @AgitIntlBundle/Tool/Date.php:42
 msgid "Sat"
 msgstr "Sat"
 
-#: @AgitIntlBundle/Tool/Date.php:66
+#: @AgitIntlBundle/Tool/Date.php:67
 msgctxt "first day of week; 0: Sunday, 1: Monday"
 msgid "0"
 msgstr ""
 
-#: @AgitIntlBundle/Setting/UserLocalesSetting.php:24
+#: @AgitIntlBundle/Setting/UserLocalesSetting.php:25
 msgid "User languages"
 msgstr ""
 
-#: @AgitIntlBundle/Setting/UserLocalesSetting.php:37
+#: @AgitIntlBundle/Setting/UserLocalesSetting.php:39
 msgid "You must select at least one user language."
 msgstr ""
 
-#: @AgitIntlBundle/Setting/InternalLocaleSetting.php:23
+#: @AgitIntlBundle/Setting/InternalLocaleSetting.php:24
 msgid "Internal language"
 msgstr ""
