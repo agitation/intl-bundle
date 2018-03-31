@@ -44,11 +44,6 @@ services:
 
     # settings (optional, will only be used if setting-bundle is installed)
 
-    agit.setting.internal_locale:
-        class: Agit\IntlBundle\Setting\InternalLocaleSetting
-        arguments: [ "@agit.intl.locale", "@agit.validation" ]
-        tags: [{ name: agit.setting }]
-
     agit.setting.available_locales:
         class: Agit\IntlBundle\Setting\UserLocalesSetting
         arguments: [ "@agit.intl.locale", "@agit.validation" ]

@@ -32,7 +32,6 @@ class LocaleService
         textdomain($textdomain);
 
         $this->setLocale($this->defaultLocale);
-        Translate::_setAppLocale($this->defaultLocale);
     }
 
     // default locale for this application

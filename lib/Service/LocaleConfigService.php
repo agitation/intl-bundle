@@ -26,13 +26,6 @@ class LocaleConfigService
         $this->settingService = $settingService;
     }
 
-    public function getInternalLocale()
-    {
-        return ($this->settingService)
-            ? $this->settingService->getValueOf('agit.internal_locale')
-            : $this->localeService->getDefaultLocale();
-    }
-
     public function getActiveLocales()
     {
         return ($this->settingService)

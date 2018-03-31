@@ -15,16 +15,9 @@ class Translate
     // used internally to store the currently set locale
     private static $locale = 'en_US';
 
-    private static $appLocale = 'en_US';
-
     public static function getLocale()
     {
         return self::$locale;
-    }
-
-    public static function getAppLocale()
-    {
-        return self::$appLocale;
     }
 
     public static function t($string)
@@ -44,39 +37,6 @@ class Translate
         $translation = self::t($contextString);
 
         return ($translation === $contextString) ? $string : $translation;
-    }
-
-    // like t(), only in the appLocale. Useful for logging etc.
-    public static function tl($string)
-    {
-        $locale = self::$locale;
-        self::_setLocale(self::$appLocale);
-        $translation = self::t($string);
-        self::_setLocale($locale);
-
-        return $translation;
-    }
-
-    // like n(), only in the appLocale. Useful for logging etc.
-    public static function nl($string1, $string2, $num)
-    {
-        $locale = self::$locale;
-        self::_setLocale(self::$appLocale);
-        $translation = self::n($string1, $string2, $num);
-        self::_setLocale($locale);
-
-        return $translation;
-    }
-
-    // like x(), only in the appLocale. Useful for logging etc.
-    public static function xl($context, $string)
-    {
-        $locale = self::$locale;
-        self::_setLocale(self::$appLocale);
-        $translation = self::x($context, $string);
-        self::_setLocale($locale);
-
-        return $translation;
     }
 
     /**
@@ -122,14 +82,5 @@ class Translate
         setlocale(LC_ALL, "$locale.utf8");
         setlocale(LC_NUMERIC, 'en_US.utf8'); // avoid strange results with floats in sprintf
         self::$locale = $locale;
-    }
-
-    /**
-     * DO NOT CALL THIS METHOD; it is only public for LocaleService.
-     * @param mixed $locale
-     */
-    public static function _setAppLocale($locale)
-    {
-        self::$appLocale = $locale;
     }
 }

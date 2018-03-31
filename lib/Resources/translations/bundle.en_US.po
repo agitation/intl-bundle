@@ -164,7 +164,3 @@ msgstr ""
 #: @AgitIntlBundle/Setting/UserLocalesSetting.php:39
 msgid "You must select at least one user language."
 msgstr ""
-
-#: @AgitIntlBundle/Setting/InternalLocaleSetting.php:24
-msgid "Internal language"
-msgstr ""
