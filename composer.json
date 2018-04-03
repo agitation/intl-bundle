@@ -8,9 +8,6 @@
     "require-dev": {
         "agitation/cldr-bundle" : "dev-master"
     },
-    "suggest": {
-        "agitation/setting-bundle": "Can be used to make the internal locale and the user locales configurable."
-    },
     "autoload": {
         "psr-4": {
             "Agit\\IntlBundle\\": "lib/"

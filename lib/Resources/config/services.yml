@@ -10,8 +10,7 @@ services:
 
     agit.intl.config:
         class: Agit\IntlBundle\Service\LocaleConfigService
-        arguments: [ "@agit.intl.locale", "@?agit.setting" ]
-        tags: [{ name: kernel.event_listener, event: agit.settings.loaded, method: onSettingsLoaded }]
+        arguments: [ "@agit.intl.locale" ]
 
     # (Optional) Twig extension for template text block translations
     agit.intl.twig.translation:
@@ -39,12 +38,3 @@ services:
         class: Agit\IntlBundle\EventListener\CatalogCacheEventListener
         arguments: [ "@kernel", "@event_dispatcher", "%kernel.bundles%", "%agit_intl_locales%", "%agit_intl_catalog_dir%", "agit" ]
         tags: [{ name: kernel.cache_warmer, priority : 1000 }]
-
-
-
-    # settings (optional, will only be used if setting-bundle is installed)
-
-    agit.setting.available_locales:
-        class: Agit\IntlBundle\Setting\UserLocalesSetting
-        arguments: [ "@agit.intl.locale", "@agit.validation" ]
-        tags: [{ name: agit.setting }]
